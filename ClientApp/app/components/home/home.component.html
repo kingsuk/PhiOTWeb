@@ -1,0 +1,47 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="col-lg-6">
+                    <img src="esp8266pins.png" height="550" />
+                </div>
+                <div class="col-lg-6" style="padding-top: 9%;">
+                    <div class="row" *ngFor="let item of totalConfig" style="line-height: 245%;">
+                        <div class="col-lg-2">
+                            {{item.name}}
+                        </div>
+                        <div class="col-lg-10">
+                            <div *ngIf="item.value == '2' ? false: true">
+                                <button type="button" class="btn btn-sm btn-toggle {{item.value?'active':''}}" (click)="toggleChild(item.name)">
+                                    <div class="handle"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="usr">Topic Name:</label>
+                        <input type="text" class="form-control" [(ngModel)]="topic">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-block btn-primary" (click)="publish()">Publish</button>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-block btn-primary" (click)="station()">Station</button>
+                    </div>
+
+                </div>
+                <div class="col-lg-6">
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
