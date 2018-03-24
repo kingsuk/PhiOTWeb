@@ -25,6 +25,8 @@ namespace PhiOTWeb.Controllers
             this.applicationDbContext = applicationDbContext;
         }
         
+        [HttpGet]
+        [Route("publish")]
         public string Get(string topic,string message)
         {
             MqttClient client = new MqttClient("139.59.28.88");

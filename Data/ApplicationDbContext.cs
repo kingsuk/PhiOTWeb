@@ -23,6 +23,7 @@ namespace PhiOTWeb.Data
             // Add your customizations after calling base.OnModelCreating(builder);
         }
         public virtual DbSet<ResultObject> ResultObject { get; set; }
+        public virtual DbSet<Login> Login { get; set; }
 
     }
 }
