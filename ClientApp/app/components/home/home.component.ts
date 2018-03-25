@@ -1,6 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { Http } from '@angular/http';
 import { NgModel } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { CookieService } from 'angular2-cookie/core';
 
 @Component({
     selector: 'home',
@@ -8,16 +11,23 @@ import { NgModel } from '@angular/forms';
     styleUrls:['./home.component.css']
 })
 export class HomeComponent {
+    
+    
 
     @Inject('BASE_URL') baseUrl: string;
     currentVal: any;
-    topic: string = "hello";
+    topic: string = "1002";
 
-    constructor(public http: Http) {
-        
+    constructor(public http: Http, private router: Router, private _cookieService:CookieService) {
+           //
     }
 
     ngOnInit() {
+        if(!localStorage.getItem('token'))
+        {
+            this.router.navigate(['/auth']);
+        }
+        
     }
 
     

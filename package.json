@@ -58,5 +58,10 @@
     "webpack-hot-middleware": "2.18.2",
     "webpack-merge": "4.1.0",
     "zone.js": "0.8.12"
+  },
+  "dependencies": {
+    "angular-sweetalert-service": "^2.0.2",
+    "angular2-cookie": "^1.2.6",
+    "sweetalert2": "^7.18.0"
   }
 }

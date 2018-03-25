@@ -1,0 +1,89 @@
+import { Component, Inject } from '@angular/core';
+import { Http,Headers } from '@angular/http';
+import { NgModel } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { CookieService } from 'angular2-cookie/core';
+
+@Component({
+    selector: 'auth',
+    templateUrl: './auth.component.html',
+    styleUrls:['./auth.component.css']
+})
+export class AuthComponent {
+
+    email: string = "";
+    password: string = "";
+    
+
+    private headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
+
+    @Inject('BASE_URL') baseUrl: string;
+
+    constructor(public http: Http,private router: Router, private _cookieService:CookieService) {
+        
+    }
+
+    ngOnInit() {
+
+    }
+
+    login() {
+        let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+        if(!EMAIL_REGEXP.test(this.email))
+        {
+            alert("Email is not valid");
+        }
+        else
+        {
+            if(this.password.length<6)
+            {
+                alert("Password has to be more than 6 character long.");
+            }
+            else
+            {
+                let body = `email=${this.email}&password=${this.password}`;
+
+                this.http.post('api/auth/AuthAttempt',
+                body,{ headers: this.headers }).subscribe((result) => this.success(result) , this.error);
+            }
+        }
+    }
+
+    success(result: any){
+        var jsonObject : any = JSON.parse(result._body);
+        console.log(jsonObject);
+
+        
+        this._cookieService.put('token', jsonObject.token);
+        this._cookieService.put('email', jsonObject.email);
+        
+
+        this.router.navigate(['/home']);
+    }
+
+   
+
+    error(error: any)
+    {
+        console.log(error);
+        if(error.status==403)
+        {
+            
+            var jsonObject = JSON.parse(error._body);
+            alert(jsonObject.statusMessage);
+        }
+        else if(error.status == 400)
+        {
+            var jsonObject = JSON.parse(error._body);
+            
+            
+            for (var key in jsonObject) {
+                
+                alert(jsonObject[key]);
+            }
+        }
+    }
+    
+    
+}

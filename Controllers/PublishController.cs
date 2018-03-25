@@ -16,7 +16,7 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 namespace PhiOTWeb.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Publish")]
+    [Route("api")]
     public class PublishController : Controller
     {
         private readonly ApplicationDbContext applicationDbContext;

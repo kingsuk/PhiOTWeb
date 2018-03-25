@@ -84,18 +84,18 @@ namespace PhiOTWeb.Controllers
                             signingCredentials: creds
                           );
 
-                        return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+                        return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) , email = login.email });
 
                     }
                     else
                     {
-                        return StatusCode(403,"Login failed.");
+                        return StatusCode(403,new ResultObject() { StatusMessage = "Invalid user name of password." });
                     }
                     
                 }
                 else
                 {
-                    return BadRequest("You are not registered with us. Please register.");
+                    return StatusCode(403, new ResultObject() { StatusMessage = "You are not registered with us. Please register." });
                 }
                 
             }
