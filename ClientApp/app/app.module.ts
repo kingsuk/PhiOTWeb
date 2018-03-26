@@ -13,6 +13,8 @@ import { CounterComponent } from './components/counter/counter.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { RegisterComponent } from './components/register/register.component';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { NewDeviceComponent } from './components/dashboard/new-device/new-device.component';
 
 @NgModule({
     declarations: [
@@ -22,7 +24,9 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
         FetchDataComponent,
         HomeComponent,
         AuthComponent,
-        RegisterComponent
+        RegisterComponent,
+        DashboardComponent,
+        NewDeviceComponent
     ],
     imports: [
         CommonModule,
@@ -34,7 +38,9 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
             { path: 'home', component: HomeComponent },
             { path: 'auth', component: AuthComponent },
             { path: 'counter', component: CounterComponent },
-            { path: 'fetch-data', component: FetchDataComponent }
+            { path: 'fetch-data', component: FetchDataComponent },
+            { path: 'dashboard', component: DashboardComponent },
+            { path: 'dashboard/new-device', component: NewDeviceComponent }
         ])
     ],
     providers: [

@@ -19,14 +19,14 @@ export class HomeComponent {
     topic: string = "1002";
 
     constructor(public http: Http, private router: Router, private _cookieService:CookieService) {
-           //
+           
     }
 
     ngOnInit() {
-        if(!localStorage.getItem('token'))
-        {
-            this.router.navigate(['/auth']);
-        }
+//         if(!localStorage.getItem('token'))
+//         {
+//             this.router.navigate(['/auth']);
+//         }
         
     }
 

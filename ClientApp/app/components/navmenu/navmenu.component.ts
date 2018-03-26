@@ -10,12 +10,12 @@ import { CookieService } from 'angular2-cookie/core';
 export class NavMenuComponent {
 
     email : any = 'asdf';
-    constructor(private _cookieService:CookieService) {
+//     constructor(private _cookieService:CookieService) {
         
-    }
+//     }
     ngOnInit() {
         
-        this.email = this._cookieService.get('email');
+        //this.email = this._cookieService.get('email');
     }
     
 }
