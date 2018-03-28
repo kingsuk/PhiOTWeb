@@ -3,8 +3,6 @@ import { Http,Headers } from '@angular/http';
 import { NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { CookieService } from 'angular2-cookie/core';
-
 @Component({
     selector: 'auth',
     templateUrl: './auth.component.html',
@@ -20,7 +18,7 @@ export class AuthComponent {
 
     @Inject('BASE_URL') baseUrl: string;
 
-    constructor(public http: Http,private router: Router, private _cookieService:CookieService) {
+    constructor(public http: Http,private router: Router) {
         
     }
 
@@ -55,8 +53,7 @@ export class AuthComponent {
         console.log(jsonObject);
 
         
-        this._cookieService.put('token', jsonObject.token);
-        this._cookieService.put('email', jsonObject.email);
+        
         
 
         this.router.navigate(['/home']);

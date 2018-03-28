@@ -274,11 +274,6 @@
         }
       }
     },
-    "angular2-cookie": {
-      "version": "1.2.6",
-      "resolved": "https://registry.npmjs.org/angular2-cookie/-/angular2-cookie-1.2.6.tgz",
-      "integrity": "sha1-j6hFUx53etsEL+LzOcAED23b8J0="
-    },
     "angular2-router-loader": {
       "version": "0.3.5",
       "resolved": "https://registry.npmjs.org/angular2-router-loader/-/angular2-router-loader-0.3.5.tgz",

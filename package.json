@@ -61,7 +61,6 @@
   },
   "dependencies": {
     "angular-sweetalert-service": "^2.0.2",
-    "angular2-cookie": "^1.2.6",
     "sweetalert2": "^7.18.0"
   }
 }

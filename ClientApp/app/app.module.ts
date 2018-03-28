@@ -12,7 +12,6 @@ import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { RegisterComponent } from './components/register/register.component';
-import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NewDeviceComponent } from './components/dashboard/new-device/new-device.component';
 
@@ -42,10 +41,7 @@ import { NewDeviceComponent } from './components/dashboard/new-device/new-device
             { path: 'dashboard', component: DashboardComponent },
             { path: 'dashboard/new-device', component: NewDeviceComponent }
         ])
-    ],
-    providers: [
-        CookieService
-      ]
+    ]
 })
 export class AppModuleShared {
 }

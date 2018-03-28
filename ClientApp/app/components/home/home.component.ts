@@ -2,9 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { Http } from '@angular/http';
 import { NgModel } from '@angular/forms';
 import { Router } from '@angular/router';
-
-import { CookieService } from 'angular2-cookie/core';
-
 @Component({
     selector: 'home',
     templateUrl: './home.component.html',
@@ -18,7 +15,7 @@ export class HomeComponent {
     currentVal: any;
     topic: string = "1002";
 
-    constructor(public http: Http, private router: Router, private _cookieService:CookieService) {
+    constructor(public http: Http, private router: Router) {
            
     }
 
