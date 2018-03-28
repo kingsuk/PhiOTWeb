@@ -75,10 +75,6 @@ export class DashboardComponent implements OnInit {
         value: 2
     }];
 
-    jsonData = [{
-        header: "data",
-        data: this.totalConfig
-    }
-    ];
+    
 
 }

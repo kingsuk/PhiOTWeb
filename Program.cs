@@ -19,7 +19,7 @@ namespace PhiOTWeb
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                //.UseUrls("http://*:4000")
+                .UseUrls("http://*:5050")
                 .UseStartup<Startup>()
                 .Build();
     }
