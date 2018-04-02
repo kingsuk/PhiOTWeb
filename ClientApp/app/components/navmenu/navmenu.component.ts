@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { Router } from '@angular/router';
+
 @Component({
     selector: 'nav-menu',
     templateUrl: './navmenu.component.html',
@@ -7,10 +9,31 @@ import { Component } from '@angular/core';
 })
 export class NavMenuComponent {
 
-    email : any = 'asdf';
+    email : any ;
+
+    constructor(private router: Router) {
+        console.log(localStorage.getItem('token'));
+        if(!localStorage.getItem('token'))
+        {
+            this.router.navigate(['/auth']);
+        }
+        else
+        {
+            this.email = localStorage.getItem('user_email');
+            
+        }
+    }
 
     ngOnInit() {
-        
+        console.log(localStorage.getItem('token'));
+        if(!localStorage.getItem('token'))
+        {
+            this.router.navigate(['/auth']);
+        }
+        else
+        {
+            this.email = localStorage.getItem('user_email');
+        }
         
     }
     

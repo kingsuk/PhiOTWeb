@@ -26,8 +26,15 @@
             <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right" *ngIf="email ? true : false">
-            
-                <li><a href="#"><span class="glyphicon glyphicon-user"></span>{{email}}</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{email}}<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                      <li><a class="glyphicon glyphicon-user" href="#">Profile</a></li>
+                      <li><a href="#">Settings</a></li>
+                      <li><a href="#">Billing</a></li>
+                      <li><a class="glyphicon glyphicon-off" [routerLink]="['/auth']">Logout</a></li>
+                    </ul>
+                /li>
                 
             </ul>
     </div>

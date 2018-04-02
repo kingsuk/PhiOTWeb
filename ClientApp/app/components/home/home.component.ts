@@ -20,10 +20,7 @@ export class HomeComponent {
     }
 
     ngOnInit() {
-//         if(!localStorage.getItem('token'))
-//         {
-//             this.router.navigate(['/auth']);
-//         }
+        
         
     }
 

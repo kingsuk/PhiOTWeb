@@ -23,7 +23,7 @@ export class AuthComponent {
     }
 
     ngOnInit() {
-
+        localStorage.clear();
     }
 
     login() {
@@ -53,10 +53,11 @@ export class AuthComponent {
         console.log(jsonObject);
 
         
-        
+        localStorage.setItem('user_email', jsonObject.email);
+        localStorage.setItem('token', jsonObject.token);
         
 
-        this.router.navigate(['/home']);
+        this.router.navigate(['/dashboard']);
     }
 
    

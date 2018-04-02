@@ -78,11 +78,21 @@ namespace PhiOTWeb.Controllers
                         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
                         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+                        //var token = new JwtSecurityToken(
+                        //    claims: claims,
+                        //    expires: DateTime.Now.AddMinutes(30),
+                        //    signingCredentials: creds
+                        //  );
+
+                       
                         var token = new JwtSecurityToken(
+                            issuer: _config["Jwt:Issuer"],
+                            audience: _config["Jwt:Issuer"],
                             claims: claims,
-                            expires: DateTime.Now.AddMinutes(30),
+                            notBefore: DateTime.Now,
+                            expires: DateTime.Now.AddDays(30),
                             signingCredentials: creds
-                          );
+                        );
 
                         return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) , email = login.email });
 
