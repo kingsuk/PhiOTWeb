@@ -13,27 +13,27 @@ export class NavMenuComponent {
 
     constructor(private router: Router) {
         console.log(localStorage.getItem('token'));
-        if(!localStorage.getItem('token'))
-        {
-            this.router.navigate(['/auth']);
-        }
-        else
-        {
-            this.email = localStorage.getItem('user_email');
+//         if(!localStorage.getItem('token'))
+//         {
+//             this.router.navigate(['/auth']);
+//         }
+//         else
+//         {
+//             this.email = localStorage.getItem('user_email');
             
-        }
+//         }
     }
 
     ngOnInit() {
-        console.log(localStorage.getItem('token'));
-        if(!localStorage.getItem('token'))
-        {
-            this.router.navigate(['/auth']);
-        }
-        else
-        {
-            this.email = localStorage.getItem('user_email');
-        }
+//         console.log(localStorage.getItem('token'));
+//         if(!localStorage.getItem('token'))
+//         {
+//             this.router.navigate(['/auth']);
+//         }
+//         else
+//         {
+//             this.email = localStorage.getItem('user_email');
+//         }
         
     }
     

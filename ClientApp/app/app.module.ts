@@ -14,6 +14,8 @@ import { AuthComponent } from './components/auth/auth.component';
 import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NewDeviceComponent } from './components/dashboard/new-device/new-device.component';
+import { NodemcuComponent } from './components/nodemcu/nodemcu.component';
+import { NodeespComponent } from './components/nodeesp/nodeesp.component';
 
 @NgModule({
     declarations: [
@@ -25,7 +27,9 @@ import { NewDeviceComponent } from './components/dashboard/new-device/new-device
         AuthComponent,
         RegisterComponent,
         DashboardComponent,
-        NewDeviceComponent
+        NewDeviceComponent,
+        NodemcuComponent,
+        NodeespComponent
     ],
     imports: [
         CommonModule,
@@ -39,7 +43,9 @@ import { NewDeviceComponent } from './components/dashboard/new-device/new-device
             { path: 'counter', component: CounterComponent },
             { path: 'fetch-data', component: FetchDataComponent },
             { path: 'dashboard', component: DashboardComponent },
-            { path: 'dashboard/new-device', component: NewDeviceComponent }
+            { path: 'dashboard/new-device', component: NewDeviceComponent },
+            { path: 'device/nodemcu', component: NodemcuComponent },
+            { path: 'device/esp01', component: NodeespComponent }
         ])
     ]
 })
