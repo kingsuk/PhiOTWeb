@@ -24,6 +24,10 @@ namespace PhiOTWeb.Data
         }
         public virtual DbSet<ResultObject> ResultObject { get; set; }
         public virtual DbSet<Login> Login { get; set; }
+        public virtual DbSet<Device> Device { get; set; }
+        public virtual DbSet<DeviceTypes> DeviceTypes { get; set; }
+        public virtual DbSet<SubscriptionTypes> SubscriptionTypes { get; set; }
+        public virtual DbSet<Subscriptions> Subscriptions { get; set; }
 
     }
 }
