@@ -1,0 +1,5 @@
+#!/bin/bash
+# Script to set dotnet development variable and run
+
+export ASPNETCORE_ENVIRONMENT=Development
+dotnet run

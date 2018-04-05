@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,9 +37,9 @@ namespace PhiOTWeb.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         [Route("AddNewSubscription")]
-        [Authorize]
+        //[Authorize]
         public IActionResult AddNewSubscription(Subscriptions subscription)
         {
             try
@@ -49,7 +49,7 @@ namespace PhiOTWeb.Controllers
                     return BadRequest(ModelState);
                 }
 
-                subscription.UserID = User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value;
+                subscription.UserID = "3";//User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value;
                 ResultObject result = con.ResultObject.FromSql($"[phi].[usp_createNewSubscription] {subscription.subscriptionType},{subscription.subscriptionName},{subscription.UserID}").FirstOrDefault();
 
                 return StatusCode(200, result);

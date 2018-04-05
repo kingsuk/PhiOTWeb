@@ -16,6 +16,9 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NewDeviceComponent } from './components/dashboard/new-device/new-device.component';
 import { NodemcuComponent } from './components/nodemcu/nodemcu.component';
 import { NodeespComponent } from './components/nodeesp/nodeesp.component';
+import { MySubscriptionsComponent } from './components/subscription/my-subscriptions/my-subscriptions.component';
+import { SubscriptionsComponent } from './components/subscription/subscriptions/subscriptions.component';
+import { CreateNewSubscriptionsComponent } from './components/subscription/create-new-subscriptions/create-new-subscriptions.component';
 
 @NgModule({
     declarations: [
@@ -29,7 +32,10 @@ import { NodeespComponent } from './components/nodeesp/nodeesp.component';
         DashboardComponent,
         NewDeviceComponent,
         NodemcuComponent,
-        NodeespComponent
+        NodeespComponent,
+        MySubscriptionsComponent,
+        SubscriptionsComponent,
+        CreateNewSubscriptionsComponent
     ],
     imports: [
         CommonModule,
@@ -45,7 +51,10 @@ import { NodeespComponent } from './components/nodeesp/nodeesp.component';
             { path: 'dashboard', component: DashboardComponent },
             { path: 'dashboard/new-device', component: NewDeviceComponent },
             { path: 'device/nodemcu', component: NodemcuComponent },
-            { path: 'device/esp01', component: NodeespComponent }
+            { path: 'device/esp01', component: NodeespComponent },
+            { path: 'subscriptions', component: SubscriptionsComponent },
+            { path: 'subscription/create', component: CreateNewSubscriptionsComponent },
+            { path: 'subscription/mysubscriptions', component: MySubscriptionsComponent }
         ])
     ]
 })
