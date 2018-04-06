@@ -43,7 +43,7 @@ namespace PhiOTWeb.Controllers
             return Ok(header);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("AuthAttempt")]
         public IActionResult AuthAttempt(Login login)
         {

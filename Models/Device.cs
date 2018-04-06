@@ -23,8 +23,6 @@ namespace PhiOTWeb.Models
 
         [Required]
         public Nullable<long> subscription_id { get; set; }
-
-        [Required]
         public string device_token { get; set; }
         
     }

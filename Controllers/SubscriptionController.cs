@@ -39,7 +39,7 @@ namespace PhiOTWeb.Controllers
 
         [HttpGet]
         [Route("AddNewSubscription")]
-        //[Authorize]
+        [Authorize]
         public IActionResult AddNewSubscription(Subscriptions subscription)
         {
             try
@@ -49,8 +49,31 @@ namespace PhiOTWeb.Controllers
                     return BadRequest(ModelState);
                 }
 
-                subscription.UserID = "3";//User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value;
+                subscription.UserID = Convert.ToInt64(User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value);
                 ResultObject result = con.ResultObject.FromSql($"[phi].[usp_createNewSubscription] {subscription.subscriptionType},{subscription.subscriptionName},{subscription.UserID}").FirstOrDefault();
+
+                return StatusCode(200, result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetSubscriptionById")]
+        [Authorize]
+        public IActionResult GetSubscriptionById()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                long UserID = Convert.ToInt64(User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value);
+                List<Subscriptions> result = con.Subscriptions.FromSql($"[phi].[usp_GetSubscriptionById] {UserID}").ToList();
 
                 return StatusCode(200, result);
             }

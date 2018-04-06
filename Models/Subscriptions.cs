@@ -16,7 +16,7 @@ namespace PhiOTWeb.Models
 
         [Required]
         public string subscriptionName { get; set; }
-        public string UserID { get; set; }
+        public long UserID { get; set; }
         public int status { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime ModifiedDate { get; set; }

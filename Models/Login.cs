@@ -11,7 +11,7 @@ namespace PhiOTWeb.Models
         [Key]
         public long UserID { get; set; }
 
-        
+        [Required]
         [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "E-mail is not valid")]
         [DataType(DataType.EmailAddress, ErrorMessage = "Email is not valid.")]
         [Display(Name = "Email")]

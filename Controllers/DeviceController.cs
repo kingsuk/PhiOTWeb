@@ -21,7 +21,7 @@ namespace PhiOTWeb.Controllers
             con = applicationDbContext;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("AddNewDevice")]
         [Authorize]
         public IActionResult AddNewDevice(Device device)
@@ -34,6 +34,7 @@ namespace PhiOTWeb.Controllers
                 }
 
                 device.user_id = User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value;
+                device.device_token = Guid.NewGuid().ToString("N");
                 ResultObject result = con.ResultObject.FromSql($"[phi].[usp_AddNewDevice] {device.DeviceName},{device.user_id},{device.device_type_id},{device.subscription_id},{device.device_token}").FirstOrDefault();
 
                 return StatusCode(200, result);
