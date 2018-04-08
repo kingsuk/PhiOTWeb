@@ -22,8 +22,8 @@ namespace PhiOTWeb.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllSubscriptions")]
-        public IActionResult GetAllSubscriptions()
+        [Route("GetAllSubscriptionTypes")]
+        public IActionResult GetAllSubscriptionTypes()
         {
             try
             {

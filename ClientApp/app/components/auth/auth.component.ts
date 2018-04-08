@@ -23,7 +23,7 @@ export class AuthComponent {
     }
 
     ngOnInit() {
-        //localStorage.clear();
+        localStorage.clear();
     }
 
     login() {
@@ -42,7 +42,7 @@ export class AuthComponent {
             {
                 let body = `email=${this.email}&password=${this.password}`;
 
-                this.http.post('api/auth/AuthAttempt',
+                this.http.get('api/auth/AuthAttempt?'+body,
                 body,{ headers: this.headers }).subscribe((result) => this.success(result) , this.error);
             }
         }
@@ -53,8 +53,8 @@ export class AuthComponent {
         console.log(jsonObject);
 
         
-        //localStorage.setItem('user_email', jsonObject.email);
-        //localStorage.setItem('token', jsonObject.token);
+        localStorage.setItem('user_email', jsonObject.email);
+        localStorage.setItem('token', jsonObject.token);
         
 
         this.router.navigate(['/dashboard']);

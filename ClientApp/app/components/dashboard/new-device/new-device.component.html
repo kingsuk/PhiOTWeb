@@ -45,7 +45,6 @@
 </div>
 
 
-
 <!-- Modal -->
 <div id="addDevice" class="modal fade" role="dialog">
   <div class="modal-dialog modal-sm" style="width: 30%">
@@ -60,12 +59,12 @@
         <form>
           <div class="form-group">
             <label>Give a name to your device:</label>
-            <input type="text" class="form-control">
+            <input type="text" class="form-control" [(ngModel)]="DeviceName" name="DeviceName">
           </div>
           <div class="form-group">
             <label>Select Subsription:</label>
-            <select class="form-control" id="sel1">
-              <option>Free</option>
+            <select class="form-control" id="sel1" [(ngModel)]="SubscriptionId" name="SubscriptionId">
+              <option *ngFor="let item of subs" value="{{item.id}}">{{item.subscriptionName}}</option>
             </select>
           </div>
           <br>
