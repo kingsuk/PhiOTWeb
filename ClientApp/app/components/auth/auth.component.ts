@@ -43,7 +43,7 @@ export class AuthComponent {
                 let body = `email=${this.email}&password=${this.password}`;
 
                 this.http.get('api/auth/AuthAttempt?'+body,
-                body,{ headers: this.headers }).subscribe((result) => this.success(result) , this.error);
+                { headers: this.headers }).subscribe((result) => this.success(result) , this.error);
             }
         }
     }

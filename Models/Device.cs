@@ -13,7 +13,7 @@ namespace PhiOTWeb.Models
 
         [Required]
         public string DeviceName { get; set; }
-        public string user_id { get; set; }
+        public long user_id { get; set; }
 
         [Required]
         public Nullable<int> device_type_id { get; set; }

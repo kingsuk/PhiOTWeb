@@ -13,9 +13,9 @@ export class NewDeviceComponent implements OnInit {
   
   subs: any;
   DeviceName : string = "name";
-  SubscriptionId : int;
+  SubscriptionId : number = 0;
   
-  currentDeviceType : number;
+  currentDeviceType : number = 0;
   private headers = new Headers({'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2VtYWlsIjoia2luZ3N1a0BnbWFpbC5jb20iLCJ1c2VyX2lkIjoiMyIsIm5iZiI6MTUyMzAwOTI0MywiZXhwIjoxNTI1NjAxMjQzLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwNTAvIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MDUwLyJ9.S64wAZY2GSuX7Yf5rz6WNNKvBlbvG5dm7XDIZgh6D3c'});
 
   constructor(public http: Http,private router: Router) {
@@ -40,7 +40,7 @@ export class NewDeviceComponent implements OnInit {
   createNewDevice()
   {
     let body = `DeviceName=${this.DeviceName}&device_type_id=${this.currentDeviceType}&subscription_id=${this.SubscriptionId}`;
-    this.http.get('api/Device/AddNewDevice?'body,{ headers: this.headers }).subscribe((result) => this.createDeviceSuccess(result) , (error) => this.error(error));
+    this.http.get('api/Device/AddNewDevice?'+body,{ headers: this.headers }).subscribe((result) => this.createDeviceSuccess(result) , (error) => this.error(error));
     
   }
   
@@ -56,6 +56,7 @@ export class NewDeviceComponent implements OnInit {
     console.log(result);
         var jsonObject : any = JSON.parse(result._body);
         console.log(jsonObject);
+        alert(jsonObject.statusMessage);
         
         
         
