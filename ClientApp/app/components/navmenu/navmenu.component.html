@@ -19,6 +19,11 @@
                     <span class='glyphicon glyphicon-th-list'></span> Fetch data
                 </a>
             </li>
+          <li [routerLinkActive]="['link-active']">
+                <a [routerLink]="['/subscriptions']">
+                    <span class='glyphicon glyphicon-th-list'></span> Subscriptions
+                </a>
+            </li>
         </ul>
         <ul class="nav navbar-nav navbar-right" *ngIf="email ? false : true">
             

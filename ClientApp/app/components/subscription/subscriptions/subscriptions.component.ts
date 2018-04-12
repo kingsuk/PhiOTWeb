@@ -10,18 +10,30 @@ import { Router } from '@angular/router';
 })
 export class SubscriptionsComponent implements OnInit {
   
-  subsriptions:any;
+  subsriptions = [{
+    id: 0,
+    subscriptionTypeName : '',
+    validity : 0,
+    price : 0,
+    apiCallsPerDay: 0,
+    numberOfDevices : 0
+  }];
 
   constructor(public http: Http,private router: Router) { }
 
   ngOnInit() {
-     this.http.get('api/Subscription/GetAllSubscriptions').subscribe((result) => this.success(result) , (error) => console.log(error));
+     this.http.get('api/Subscription/GetAllSubscriptionTypes').subscribe((result) => this.success(result) , (error) => console.log(error));
   }
   
   success(result : any) : any {
     var jsonResult : any = JSON.parse(result._body);
     this.subsriptions = jsonResult;
-    console.log(jsonResult[0]);
+    console.log(jsonResult);
+  }
+  
+  buyButton(subscriptionTypeId:number)
+  {
+    alert(subscriptionTypeId);
   }
 
 }

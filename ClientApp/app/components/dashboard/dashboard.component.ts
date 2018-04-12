@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+import {
+  Http,
+  Headers
+} from '@angular/http';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,74 +14,65 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  
-  
-  constructor() { }
+  token: string = localStorage.getItem('token');
+
+  devices = [{
+    deviceName: "",
+    id: 0,
+    device_type_id: 0
+  }];
+
+  private headers = new Headers({
+    'Authorization': 'Bearer ' + this.token
+  });
+
+  console.log(token);
+
+
+  constructor(private http: Http) {}
 
   ngOnInit() {
-  }
-  
-  devices = [{
-        name: "D0",
-        pin: 1,
-        value: 0
-    }, {
-        name: "D1",
-        pin: 2,
-        value: 1
-    }, {
-        name: "D2",
-        pin: 1,
-        value: 0
-    }, {
-        name: "D3",
-        pin: 2,
-        value: 1
-    }, {
-        name: "D4",
-        pin: 2,
-        value: 0
-    }, {
-        name: "3V3",
-        value: 2
-    }, {
-        name: "GND",
-      pin: 2,
-        value: 2
-    }, {
-        name: "D5",
-        pin: 2,
-        value: 1
-    }, {
-        name: "D6",
-        pin: 2,
-        value: 0
-    }, {
-        name: "D7",
-        pin: 1,
-        value: 1
-    }, {
-        name: "D8",
-        pin: 1,
-        value: 0
-    }, {
-        name: "D9",
-        pin: 2,
-        value: 1
-    }, {
-        name: "D10",
-        pin: 1,
-        value: 1
-    }, {
-        name: "GND",
-      pin: 2,
-        value: 2
-    }, {
-        name: "3V3",
-      pin: 2,
-        value: 2
-    }];
+    this.http.get('api/device/GetAllDevicesByUser', {
+      headers: this.headers
+    }).subscribe((result) => this.success(result), (error) => this.error(error));
 
-    
+  }
+
+  success(result: any) {
+    var jsonObject: any = JSON.parse(result._body);
+    console.log(jsonObject);
+    this.devices = jsonObject;
+
+
+  }
+
+  edit(id: number) {
+    alert(id);
+  }
+
+  delete(id: number) {
+    alert(id);
+  }
+
+  error(error: any) {
+    console.log(error);
+    if (error.status == 403) {
+
+      var jsonObject = JSON.parse(error._body);
+      alert(jsonObject.statusMessage);
+    } else if (error.status == 400) {
+      var jsonObject = JSON.parse(error._body);
+
+
+      for (var key in jsonObject) {
+
+        alert(jsonObject[key]);
+      }
+    }
+  }
+
+
+
+
 
 }

@@ -5,9 +5,9 @@
   "requires": true,
   "dependencies": {
     "@angular/animations": {
-      "version": "4.2.5",
-      "resolved": "https://registry.npmjs.org/@angular/animations/-/animations-4.2.5.tgz",
-      "integrity": "sha1-EjD2vGoY8quyPifx2a6e+v0aYDE=",
+      "version": "4.4.6",
+      "resolved": "https://registry.npmjs.org/@angular/animations/-/animations-4.4.6.tgz",
+      "integrity": "sha1-+mYYmaik44y3xYPHpcl85l1ZKjU=",
       "dev": true,
       "requires": {
         "tslib": "1.7.1"
@@ -474,9 +474,9 @@
       }
     },
     "aspnet-webpack": {
-      "version": "2.0.1",
-      "resolved": "https://registry.npmjs.org/aspnet-webpack/-/aspnet-webpack-2.0.1.tgz",
-      "integrity": "sha1-TZyh3BIM5+LlzdX3nCrJgDuq7/s=",
+      "version": "2.0.3",
+      "resolved": "https://registry.npmjs.org/aspnet-webpack/-/aspnet-webpack-2.0.3.tgz",
+      "integrity": "sha512-TwutLcYQlLikMJ8mcv8D9KSr5BkkFbpQDY/LABj/dMwz6EAM9azqV9WfgrQ+1UPmycS6VVgQZhITmCmTOAiYtg==",
       "dev": true,
       "requires": {
         "connect": "3.6.2",
@@ -484,7 +484,7 @@
         "memory-fs": "0.3.0",
         "require-from-string": "1.2.1",
         "webpack-dev-middleware": "1.11.0",
-        "webpack-node-externals": "1.6.0"
+        "webpack-node-externals": "1.7.2"
       }
     },
     "assert": {
@@ -6887,9 +6887,9 @@
       }
     },
     "webpack-node-externals": {
-      "version": "1.6.0",
-      "resolved": "https://registry.npmjs.org/webpack-node-externals/-/webpack-node-externals-1.6.0.tgz",
-      "integrity": "sha1-Iyxi7GCSsQBjWj0p2DwXRxKN+b0=",
+      "version": "1.7.2",
+      "resolved": "https://registry.npmjs.org/webpack-node-externals/-/webpack-node-externals-1.7.2.tgz",
+      "integrity": "sha512-ajerHZ+BJKeCLviLUUmnyd5B4RavLF76uv3cs6KNuO8W+HuQaEs0y0L7o40NQxdPy5w0pcv8Ew7yPUAQG0UdCg==",
       "dev": true
     },
     "webpack-sources": {

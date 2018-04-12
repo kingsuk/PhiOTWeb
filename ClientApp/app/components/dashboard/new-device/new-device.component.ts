@@ -11,12 +11,13 @@ import { Router } from '@angular/router';
 })
 export class NewDeviceComponent implements OnInit {
   
+  token :string = localStorage.getItem('token');
   subs: any;
   DeviceName : string = "name";
   SubscriptionId : number = 0;
   
   currentDeviceType : number = 0;
-  private headers = new Headers({'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2VtYWlsIjoia2luZ3N1a0BnbWFpbC5jb20iLCJ1c2VyX2lkIjoiMyIsIm5iZiI6MTUyMzAwOTI0MywiZXhwIjoxNTI1NjAxMjQzLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwNTAvIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MDUwLyJ9.S64wAZY2GSuX7Yf5rz6WNNKvBlbvG5dm7XDIZgh6D3c'});
+  private headers = new Headers({'Authorization': 'Bearer '+this.token});
 
   constructor(public http: Http,private router: Router) {
   
