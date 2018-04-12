@@ -14,7 +14,7 @@ import {
 })
 export class DashboardComponent implements OnInit {
 
-  token: string = localStorage.getItem('token');
+  token = localStorage.getItem('token');
 
   devices = [{
     deviceName: "",
@@ -26,7 +26,6 @@ export class DashboardComponent implements OnInit {
     'Authorization': 'Bearer ' + this.token
   });
 
-  console.log(token);
 
 
   constructor(private http: Http) {}

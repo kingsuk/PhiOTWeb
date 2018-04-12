@@ -10,6 +10,14 @@ import { Router } from '@angular/router';
 })
 export class SubscriptionsComponent implements OnInit {
   
+
+
+  token = localStorage.getItem('token');
+  private headers = new Headers({'Authorization': 'Bearer '+this.token});
+
+  subscriptionName:string = "";
+  subscriptionType : number = 0;
+
   subsriptions = [{
     id: 0,
     subscriptionTypeName : '',
@@ -22,7 +30,7 @@ export class SubscriptionsComponent implements OnInit {
   constructor(public http: Http,private router: Router) { }
 
   ngOnInit() {
-     this.http.get('api/Subscription/GetAllSubscriptionTypes').subscribe((result) => this.success(result) , (error) => console.log(error));
+     this.http.get('api/Subscription/GetAllSubscriptionTypes').subscribe((result) => this.success(result) , (error) => this.error(error));
   }
   
   success(result : any) : any {
@@ -33,7 +41,44 @@ export class SubscriptionsComponent implements OnInit {
   
   buyButton(subscriptionTypeId:number)
   {
-    alert(subscriptionTypeId);
+    this.subscriptionType = subscriptionTypeId;
+    //alert(subscriptionTypeId);
+  }
+
+  createNewSubscription()
+  {
+    //alert(this.subscriptionName);
+    let body = `subscriptionType=${this.subscriptionType}&subscriptionName=${this.subscriptionName}`;
+    this.http.get('api/Subscription/AddNewSubscription?'+body,{ headers: this.headers }).subscribe((result) => this.subscriptionCreateSuccess(result) , (error) => this.error(error));
+
+  }
+
+  subscriptionCreateSuccess(result : any) : any {
+    var jsonResult : any = JSON.parse(result._body);
+    
+    alert(jsonResult.statusMessage);
+    this.router.navigate(['/dashboard/new-device']);
+  }
+
+  error(error: any)
+  {
+      console.log(error);
+      if(error.status==403)
+      {
+          
+          var jsonObject = JSON.parse(error._body);
+          alert(jsonObject.statusMessage);
+      }
+      else if(error.status == 400)
+      {
+          var jsonObject = JSON.parse(error._body);
+          
+          
+          for (var key in jsonObject) {
+              
+              alert(jsonObject[key]);
+          }
+      }
   }
 
 }

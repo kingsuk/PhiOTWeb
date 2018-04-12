@@ -11,12 +11,14 @@ import { Router } from '@angular/router';
 })
 export class NewDeviceComponent implements OnInit {
   
-  token :string = localStorage.getItem('token');
+  
   subs: any;
-  DeviceName : string = "name";
+  DeviceName : string = "";
   SubscriptionId : number = 0;
   
   currentDeviceType : number = 0;
+
+  token = localStorage.getItem('token');
   private headers = new Headers({'Authorization': 'Bearer '+this.token});
 
   constructor(public http: Http,private router: Router) {
@@ -59,11 +61,33 @@ export class NewDeviceComponent implements OnInit {
         console.log(jsonObject);
         alert(jsonObject.statusMessage);
         
+        if(this.currentDeviceType==1)
+        {
+            this.router.navigate(['/device/nodemcu/'+jsonObject.statusCode]);
+        }
+        else if(this.currentDeviceType == 2)
+        {
+            this.router.navigate(['/device/esp01/'+jsonObject.statusCode]);
+        }
         
         
     }
 
-   
+    getSubscriptionName(subscriptionType: number)
+    {
+        if(subscriptionType==1)
+        {
+            return "Free";
+        }
+        else if(subscriptionType==2)
+        {
+            return "Dev";
+        }
+        else if(subscriptionType==3)
+        {
+            return "Pro";
+        }
+    }
 
     error(error: any)
     {

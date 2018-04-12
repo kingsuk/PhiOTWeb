@@ -64,12 +64,14 @@
           <div class="form-group">
             <label>Select Subsription:</label>
             <select class="form-control" id="sel1" [(ngModel)]="SubscriptionId" name="SubscriptionId">
-              <option *ngFor="let item of subs" value="{{item.id}}">{{item.subscriptionName}}</option>
+              
+              <option *ngFor="let item of subs" value="{{item.id}}">{{item.subscriptionName}}({{getSubscriptionName(item.subscriptionType)}})</option>
             </select>
+            *Don't have a subscription? <a data-dismiss="modal" [routerLink]="['/subscriptions']">Create One</a>
           </div>
           <br>
           <div class="form-group">
-            <button class="btn btn-block btn-primary" (click)="createNewDevice()">Create</button>
+            <button class="btn btn-block btn-primary" data-dismiss="modal" (click)="createNewDevice()">Create</button>
           </div>
           <br>
         </form>

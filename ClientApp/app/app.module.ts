@@ -50,8 +50,8 @@ import { CreateNewSubscriptionsComponent } from './components/subscription/creat
             { path: 'fetch-data', component: FetchDataComponent },
             { path: 'dashboard', component: DashboardComponent },
             { path: 'dashboard/new-device', component: NewDeviceComponent },
-            { path: 'device/nodemcu', component: NodemcuComponent },
-            { path: 'device/esp01', component: NodeespComponent },
+            { path: 'device/nodemcu/:id', component: NodemcuComponent },
+            { path: 'device/esp01/:id', component: NodeespComponent },
             { path: 'subscriptions', component: SubscriptionsComponent },
             { path: 'subscription/create', component: CreateNewSubscriptionsComponent },
             { path: 'subscription/mysubscriptions', component: MySubscriptionsComponent }

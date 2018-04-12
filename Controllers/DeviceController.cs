@@ -37,7 +37,7 @@ namespace PhiOTWeb.Controllers
                 }
 
                 device.user_id = Convert.ToInt64(User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value);
-                device.device_token = (device.DeviceName+Guid.NewGuid().ToString("N")).Substring(0,Convert.ToInt32(_config["CustomConfigs:TokenLength"]));
+                device.device_token = (device.DeviceName.Replace(" ", String.Empty) + Guid.NewGuid().ToString("N")).Substring(0,Convert.ToInt32(_config["CustomConfigs:TokenLength"]));
                 ResultObject result = con.ResultObject.FromSql($"[phi].[usp_AddNewDevice] {device.DeviceName},{device.user_id},{device.device_type_id},{device.subscription_id},{device.device_token}").FirstOrDefault();
 
                 return StatusCode(200, result);
@@ -59,6 +59,25 @@ namespace PhiOTWeb.Controllers
                 var user_id = User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value;
                 
                 List<Device> result = con.Device.FromSql($"[phi].[GetDevicesByUserId] {user_id}").ToList();
+
+                return StatusCode(200, result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+
+        }
+
+        [HttpGet]
+        [Route("GetDeviceInfoByDeviceId")]
+        //[Authorize]
+        public IActionResult GetDeviceInfoByDeviceId(int deviceId)
+        {
+            try
+            {
+
+                Device result = con.Device.FromSql($"[phi].[usp_GetDeviceInfoByDeviceId] {deviceId}").FirstOrDefault();
 
                 return StatusCode(200, result);
             }

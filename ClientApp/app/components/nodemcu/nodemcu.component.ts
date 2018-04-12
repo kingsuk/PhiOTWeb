@@ -1,8 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
-
-import { Http } from '@angular/http';
+import { Http,Headers } from '@angular/http';
 import { NgModel } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-nodemcu',
@@ -11,18 +10,36 @@ import { Router } from '@angular/router';
 })
 export class NodemcuComponent implements OnInit {
 
-  @Inject('BASE_URL') baseUrl: string;
-    currentVal: any;
-    topic: string = "1002";
+    @Inject('BASE_URL') baseUrl: string;
 
-    constructor(public http: Http, private router: Router) {
+    token = localStorage.getItem('token');
+    private headers = new Headers({'Authorization': 'Bearer '+this.token});
+
+    id = this.route.snapshot.paramMap.get('id');
+    currentVal: any;
+
+    device = {
+        deviceName: '',
+        device_token:''
+    }
+
+    constructor(private http: Http, private router: Router,private route: ActivatedRoute,) {
            
     }
 
     ngOnInit() {
         
-        
+        console.log(this.id);
+        let body = `deviceId=${this.id}`;
+        this.http.get('api/device/GetDeviceInfoByDeviceId?'+body,{ headers: this.headers }).subscribe((result) => this.success(result) , (error) => this.error(error));
+
     }
+
+    success(result : any) : any {
+        var jsonResult : any = JSON.parse(result._body);
+        this.device = jsonResult;
+        console.log(jsonResult);
+      }
 
     
     toggleChild(name: string)
@@ -46,15 +63,36 @@ export class NodemcuComponent implements OnInit {
     publish()
     {
 
-        this.http.get('api/publish?topic='+this.topic+'&message='+ JSON.stringify(this.jsonData)).subscribe(result => {
+        this.http.get('api/publish?topic='+this.device.device_token+'&message='+ JSON.stringify(this.jsonData)).subscribe(result => {
             console.log(result);
         }, error => console.error(error));
     }
     station()
     {
-        this.http.get('api/publish?topic=' + this.topic + '&message=' + JSON.stringify(this.stationConfig)).subscribe(result => {
+        this.http.get('api/publish?topic=' + this.device.device_token + '&message=' + JSON.stringify(this.stationConfig)).subscribe(result => {
             console.log(result);
         }, error => console.error(error));
+    }
+
+    error(error: any)
+    {
+        console.log(error);
+        if(error.status==403)
+        {
+            
+            var jsonObject = JSON.parse(error._body);
+            alert(jsonObject.statusMessage);
+        }
+        else if(error.status == 400)
+        {
+            var jsonObject = JSON.parse(error._body);
+            
+            
+            for (var key in jsonObject) {
+                
+                alert(jsonObject[key]);
+            }
+        }
     }
 
     test = "";
