@@ -10,7 +10,7 @@ import { Router,ActivatedRoute } from '@angular/router';
 })
 export class NodemcuComponent implements OnInit {
 
-    @Inject('BASE_URL') baseUrl: string;
+    
 
     token = localStorage.getItem('token');
     private headers = new Headers({'Authorization': 'Bearer '+this.token});
@@ -19,7 +19,7 @@ export class NodemcuComponent implements OnInit {
   
     currentVal: any;
     isCopied: boolean = false;
-    datasetName: string;
+    datasetName: string = "";
 
     device = {
         id: 0,
@@ -66,14 +66,15 @@ export class NodemcuComponent implements OnInit {
 
     publish()
     {
-
-        this.http.get('api/publish?topic='+this.device.device_token+'&message='+ JSON.stringify(this.jsonData)).subscribe(result => {
+        let body = `token=${this.device.device_token}&message=${JSON.stringify(this.jsonData)}`;
+        this.http.get('api/publish/sendToDevice?'+body,{headers: this.headers} ).subscribe(result => {
             console.log(result);
         }, error => console.error(error));
     }
     station()
     {
-        this.http.get('api/publish?topic=' + this.device.device_token + '&message=' + JSON.stringify(this.stationConfig)).subscribe(result => {
+        let body = `token=${this.device.device_token}&message=${JSON.stringify(this.stationConfig)}`;
+        this.http.get('api/publish/sendToDevice?'+body,{headers: this.headers} ).subscribe(result => {
             console.log(result);
         }, error => console.error(error));
     }

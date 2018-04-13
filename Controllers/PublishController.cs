@@ -5,9 +5,11 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using PhiOTWeb.Data;
 using PhiOTWeb.Models;
 using uPLibrary.Networking.M2Mqtt;
@@ -16,44 +18,110 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 namespace PhiOTWeb.Controllers
 {
     [Produces("application/json")]
-    [Route("api")]
+    [Route("api/publish")]
     public class PublishController : Controller
     {
-        private readonly ApplicationDbContext applicationDbContext;
-        public PublishController(ApplicationDbContext applicationDbContext)
+        private readonly ApplicationDbContext con;
+        private IConfiguration _config;
+
+        public PublishController(ApplicationDbContext applicationDbContext, IConfiguration config)
         {
-            this.applicationDbContext = applicationDbContext;
+            con = applicationDbContext;
+            _config = config;
         }
-        
+
         [HttpGet]
-        [Route("publish")]
-        public string Get(string topic,string message)
+        [Authorize]
+        [Route("GetAllPublishLog")]
+        public IActionResult GetAllPublishLog()
         {
-            MqttClient client = new MqttClient("139.59.28.88");
+            try
+            {
+                List<PublishLog> list = con.PublishLog.FromSql("[dbo].[usp_GetAllPublishLog]").ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
 
-            client.MqttMsgSubscribed += client_MqttMsgSubscribed;
-            client.MqttMsgUnsubscribed += client_MqttMsgUnsubscribed;
+        [HttpGet]
+        [Authorize]
+        [Route("GetPublishLogByUserId")]
+        public IActionResult GetPublishLogByUserId(PublishLog publishLog)
+        {
+            try
+            {
+                publishLog.User_id = Convert.ToInt64(User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value);
+                List<PublishLog> list = con.PublishLog.FromSql($"[dbo].[usp_GetPublishLogByUserId] {publishLog.User_id}").ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
 
-            client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
+        [HttpGet]
+        [Authorize]
+        [Route("GetPublishLogByUserToken")]
+        public IActionResult GetPublishLogByUserToken(PublishLog publishLog)
+        {
+            try
+            {
+                long User_id = Convert.ToInt64(User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value);
+                List<PublishLog> list = con.PublishLog.FromSql($"[dbo].[usp_GetPublishLogByUserToken] {publishLog.token},{User_id}").ToList();
+                return Ok(list);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
 
-            client.MqttMsgPublished += client_MqttMsgPublished;
+        [HttpGet]
+        [Authorize]
+        [Route("sendToDevice")]
+        public IActionResult sendToDevice(PublishLog publishLog)
+        {
+            try
+            {
+                MqttClient client = new MqttClient(_config["MqttConfig:Mqtt_Server"]);
 
-            client.Connect(Guid.NewGuid().ToString());
+                client.MqttMsgSubscribed += client_MqttMsgSubscribed;
+                client.MqttMsgUnsubscribed += client_MqttMsgUnsubscribed;
 
-            topic = "inTopic/" + topic;
+                client.MqttMsgPublishReceived += client_MqttMsgPublishReceived;
 
-            string[] topicName = { topic };
+                client.MqttMsgPublished += client_MqttMsgPublished;
 
-            byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE };
-            client.Subscribe(topicName, qosLevels);
+                client.Connect(Guid.NewGuid().ToString());
 
-            string jsonDataToSend = message;
+                string topic = _config["MqttConfig:Publish_Topic"] + publishLog.token;
 
-            client.Publish(topicName.FirstOrDefault(), Encoding.UTF8.GetBytes(jsonDataToSend));
+                string[] topicName = { topic };
 
-            client.Unsubscribe(topicName);
+                byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE };
+                client.Subscribe(topicName, qosLevels);
 
-            return "call done";
+                string jsonDataToSend = publishLog.message;
+
+                client.Publish(topicName.FirstOrDefault(), Encoding.UTF8.GetBytes(jsonDataToSend));
+
+                //client.Unsubscribe(topicName);
+
+                long User_id = Convert.ToInt64(User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value);
+                ResultObject result = con.ResultObject.FromSql($"[dbo].[usp_CreatePublishLog] {publishLog.token},{User_id},{publishLog.message}").FirstOrDefault();
+                
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+
+            
         }
 
         private static void client_MqttMsgPublished(object sender, MqttMsgPublishedEventArgs e)

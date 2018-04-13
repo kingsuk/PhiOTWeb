@@ -28,6 +28,8 @@ namespace PhiOTWeb.Data
         public virtual DbSet<DeviceTypes> DeviceTypes { get; set; }
         public virtual DbSet<SubscriptionTypes> SubscriptionTypes { get; set; }
         public virtual DbSet<Subscriptions> Subscriptions { get; set; }
+        public virtual DbSet<PublishLog> PublishLog { get; set; }
+        public virtual DbSet<Dataset> Dataset { get; set; }
 
     }
 }
