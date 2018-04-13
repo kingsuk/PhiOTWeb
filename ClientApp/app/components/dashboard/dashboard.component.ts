@@ -1,11 +1,6 @@
-import {
-  Component,
-  OnInit
-} from '@angular/core';
-import {
-  Http,
-  Headers
-} from '@angular/http';
+import { Component, OnInit } from '@angular/core';
+import { Http, Headers } from '@angular/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,7 +23,7 @@ export class DashboardComponent implements OnInit {
 
 
 
-  constructor(private http: Http) {}
+  constructor(private http: Http, private router: Router) {}
 
   ngOnInit() {
     this.http.get('api/device/GetAllDevicesByUser', {
@@ -45,12 +40,18 @@ export class DashboardComponent implements OnInit {
 
   }
 
-  edit(id: number) {
-    alert(id);
+  edit(id: number,device_type_id: number) {
+    if(device_type_id==1){
+      this.router.navigate(['/device/nodemcu/'+id]);
+    }
+    else if(device_type_id==2){
+      this.router.navigate(['/device/esp01/'+id]);
+    }
+    
   }
 
-  delete(id: number) {
-    alert(id);
+  delete(id: number, device_type_id: number) {
+    alert(device_type_id);
   }
 
   error(error: any) {

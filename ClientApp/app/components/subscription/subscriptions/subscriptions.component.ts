@@ -57,7 +57,7 @@ export class SubscriptionsComponent implements OnInit {
     var jsonResult : any = JSON.parse(result._body);
     
     alert(jsonResult.statusMessage);
-    this.router.navigate(['/dashboard/new-device']);
+    this.router.navigate(['/dashboard']);
   }
 
   error(error: any)

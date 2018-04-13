@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { ClipboardModule } from 'ngx-clipboard';
 
 
 import { AppComponent } from './components/app/app.component';
@@ -41,6 +42,7 @@ import { CreateNewSubscriptionsComponent } from './components/subscription/creat
         CommonModule,
         HttpModule,
         FormsModule,
+        ClipboardModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'auth', pathMatch: 'full' },
             { path: 'register', component: RegisterComponent },

@@ -16,9 +16,13 @@ export class NodemcuComponent implements OnInit {
     private headers = new Headers({'Authorization': 'Bearer '+this.token});
 
     id = this.route.snapshot.paramMap.get('id');
+  
     currentVal: any;
+    isCopied: boolean = false;
+    datasetName: string;
 
     device = {
+        id: 0,
         deviceName: '',
         device_token:''
     }
@@ -72,6 +76,11 @@ export class NodemcuComponent implements OnInit {
         this.http.get('api/publish?topic=' + this.device.device_token + '&message=' + JSON.stringify(this.stationConfig)).subscribe(result => {
             console.log(result);
         }, error => console.error(error));
+    }
+  
+    createDataset()
+    {
+      alert(this.device.id);
     }
 
     error(error: any)

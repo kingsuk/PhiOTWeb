@@ -1,47 +1,126 @@
 <div class="container">
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="row">
-                <div class="col-lg-6">
-                    <img src="../../../assests/img/1.png" height="555" />
-                </div>
-                <div class="col-lg-6" style="padding-top: 11%;">
-                    <div class="row" *ngFor="let item of totalConfig" style="line-height: 202%;">
-                        <div class="col-lg-2">
-                            {{item.name}}
-                        </div>
-                        <div class="col-lg-10">
-                            <div *ngIf="item.value == '2' ? false: true">
-                                <button type="button" class="btn btn-sm btn-toggle {{item.value?'active':''}}" (click)="toggleChild(item.name)">
-                                    <div class="handle"></div>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-lg-5">
+      <div class="row">
+        <div class="col-lg-8">
+          <img src="../../../assests/img/1.png" width="100%" />
         </div>
+        <div class="col-lg-4" style="padding-top: 14%;">
+          <div class="row" *ngFor="let item of totalConfig" style="line-height: 215%;">
 
+            <div style="display: inline-block; width: 30px">{{item.name}}</div>
+            <span *ngIf="item.value == '2' ? false: true">
+                <button type="button" class="btn btn-sm btn-toggle {{item.value?'active':''}}" (click)="toggleChild(item.name)">
+                    <div class="handle"></div>
+                </button>
+              </span>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-7">
+      <div class="row">
         <div class="col-lg-6">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="form-group">
-                        <label for="usr">Device Token: </label>
-                        <input type="text" class="form-control" [(ngModel)]="device.device_token" disabled>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-block btn-primary" (click)="publish()">Send</button>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-block btn-primary" (click)="station()">Station</button>
-                    </div>
 
-                </div>
-                <div class="col-lg-6">
+          <div class="form-group">
 
-                </div>
+            <label for="usr">Device Name: </label>
+            <div class="input-group">
+              <input type="text" class="form-control" [(ngModel)]="device.deviceName" disabled>
+              <span class="input-group-btn">
+                <button class="btn btn-default">Change</button>
+              </span>
+            </div>
+          </div>
+
+
+
+          <div class="form-group">
+            <label for="usr">Device Token: </label>
+            <div class="input-group">
+              <input type="text" class="form-control" [(ngModel)]="device.device_token" disabled>
+              <span class="input-group-btn">
+                <button class="btn btn-default" [class.btn-success]= "isCopied" type="button" ngxClipboard [cbContent]="device.device_token" (cbOnSuccess)="isCopied = true">copy</button>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <button class="btn btn-block btn-info" (click)="publish()">Send</button>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="form-group">
+            <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#createButtonModal">Save</button>
+          </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+            <button class="btn btn-block btn-warning" (click)="station()">Station</button>
+          </div>
             </div>
             
+          </div>
+          
+          
+
         </div>
+        <div class="col-lg-6">
+          <pre>Saved Datasets</pre>
+          <div class="customback" >
+            <div *ngFor="let item of totalConfig">
+              <div class="row">
+              <div class="col-lg-12">
+                <label>Fridge:</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <button class="btn btn-block btn-info">ON</button>
+              </div>
+              <div class="col-lg-6">
+                <button class="btn btn-block btn-danger">OFF</button>
+              </div>
+            </div>
+            </div>
+            
+          </div>
+
+
+        </div>
+      </div>
+
     </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="createButtonModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create New Dataset</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Subscription Name:</label>
+            <input type="text" class="form-control" [(ngModel)]="datasetName" name="subscriptionName" required>
+          </div>
+
+          <br>
+          <div class="form-group">
+            <button class="btn btn-block btn-primary" data-dismiss="modal" (click)="createDataset()">Create</button>
+          </div>
+          <br>
+        </form>
+      </div>
+    </div>
+
+  </div>
 </div>

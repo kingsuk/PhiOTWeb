@@ -24,12 +24,12 @@
 
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6">
-            <a (click)="edit(item.id)">
+            <a (click)="edit(item.id,item.device_type_id)">
               <span class="glyphicon glyphicon-edit" ></span>Edit
             </a>
             <br>
             <br>
-            <a (click)="delete(item.id)">
+            <a (click)="delete(item.id,item.device_type_id)">
               <span class="glyphicon glyphicon-trash"></span>Delete
             </a>
           </div>
