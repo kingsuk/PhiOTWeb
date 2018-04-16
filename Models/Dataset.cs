@@ -15,6 +15,8 @@ namespace PhiOTWeb.Models
         public string ds_name { get; set; }
         public Nullable<long> ds_userId { get; set; }
         [Required]
+        public long ds_deviceId { get; set; }
+        [Required]
         public string jsonData { get; set; }
         [Required]
         public string reverseJsonData { get; set; }

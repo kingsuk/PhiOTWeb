@@ -26,10 +26,15 @@ export class DashboardComponent implements OnInit {
   constructor(private http: Http, private router: Router) {}
 
   ngOnInit() {
+    this.getAllDevicesByUserId();
+
+  }
+
+  getAllDevicesByUserId()
+  {
     this.http.get('api/device/GetAllDevicesByUser', {
       headers: this.headers
     }).subscribe((result) => this.success(result), (error) => this.error(error));
-
   }
 
   success(result: any) {
@@ -51,8 +56,33 @@ export class DashboardComponent implements OnInit {
   }
 
   delete(id: number, device_type_id: number) {
-    alert(device_type_id);
+    //alert(device_type_id);
+
+    let body = `id=${id}`;
+
+    this.http.get(`api/device/DeleteDeviceByDeviceAndUserId?${body}`, { headers: this.headers }).subscribe((result:any) => 
+    {
+      var jsonResult : any = JSON.parse(result._body);
+      alert(jsonResult.statusMessage);
+      this.getAllDevicesByUserId();
+    }, (error) => this.error(error));
   }
+
+  getSubscriptionName(subscriptionType: number)
+    {
+        if(subscriptionType==1)
+        {
+            return "Free";
+        }
+        else if(subscriptionType==2)
+        {
+            return "Dev";
+        }
+        else if(subscriptionType==3)
+        {
+            return "Pro";
+        }
+    }
 
   error(error: any) {
     console.log(error);

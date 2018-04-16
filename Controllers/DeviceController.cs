@@ -50,6 +50,30 @@ namespace PhiOTWeb.Controllers
         }
 
         [HttpGet]
+        [Route("DeleteDeviceByDeviceAndUserId")]
+        [Authorize]
+        public IActionResult DeleteDeviceByDeviceAndUserId(Device device)
+        {
+            try
+            {
+                //if (!ModelState.IsValid)
+                //{
+                //    return BadRequest(ModelState);
+                //}
+
+                device.user_id = Convert.ToInt64(User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value);
+                ResultObject result = con.ResultObject.FromSql($"[phi].[usp_DeleteDeviceByDeviceAndUserId] {device.id},{device.user_id}").FirstOrDefault();
+
+                return StatusCode(200, result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+
+        }
+
+        [HttpGet]
         [Route("GetAllDevicesByUser")]
         [Authorize]
         public IActionResult GetAllDevicesByUser()
