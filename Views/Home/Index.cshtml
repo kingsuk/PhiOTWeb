@@ -1,8 +1,40 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+<style>
+  .loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #00adff8c;
+  border-bottom: 16px solid #00adff8c;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
 
-<app>Loading...</app>
+@@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+<app>
+    <div>
+        <div class="loader"></div>
+    </div>
+</app>
+    
 
 <script src="~/dist/vendor.js" asp-append-version="true"></script>
 @section scripts {
