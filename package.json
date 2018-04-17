@@ -61,6 +61,7 @@
   },
   "dependencies": {
     "angular-sweetalert-service": "^2.0.2",
+    "ngx-bootstrap": "^2.0.3",
     "ngx-clipboard": "^10.0.0",
     "sweetalert2": "^7.18.0"
   }

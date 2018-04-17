@@ -4347,6 +4347,11 @@
       "integrity": "sha1-KzJxhOiZIQEXeyhWP7XnECrNDKk=",
       "dev": true
     },
+    "ngx-bootstrap": {
+      "version": "2.0.3",
+      "resolved": "https://registry.npmjs.org/ngx-bootstrap/-/ngx-bootstrap-2.0.3.tgz",
+      "integrity": "sha512-SdtOQeQrT2BW5mUbzotZF8S55QaAYOBT7orrl2Pi/U5mCVH4U7YJIaN7yNzMfjGsYINmBOSY8Zi1MBUC1UzbWg=="
+    },
     "ngx-clipboard": {
       "version": "10.0.0",
       "resolved": "https://registry.npmjs.org/ngx-clipboard/-/ngx-clipboard-10.0.0.tgz",

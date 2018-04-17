@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { ClipboardModule } from 'ngx-clipboard';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 
 import { AppComponent } from './components/app/app.component';
@@ -43,6 +44,7 @@ import { CreateNewSubscriptionsComponent } from './components/subscription/creat
         HttpModule,
         FormsModule,
         ClipboardModule,
+        ModalModule.forRoot(),
         RouterModule.forRoot([
             { path: '', redirectTo: 'auth', pathMatch: 'full' },
             { path: 'register', component: RegisterComponent },
