@@ -5,9 +5,9 @@
   "requires": true,
   "dependencies": {
     "@angular/animations": {
-      "version": "4.4.6",
-      "resolved": "https://registry.npmjs.org/@angular/animations/-/animations-4.4.6.tgz",
-      "integrity": "sha1-+mYYmaik44y3xYPHpcl85l1ZKjU=",
+      "version": "4.2.5",
+      "resolved": "https://registry.npmjs.org/@angular/animations/-/animations-4.2.5.tgz",
+      "integrity": "sha1-EjD2vGoY8quyPifx2a6e+v0aYDE=",
       "dev": true,
       "requires": {
         "tslib": "1.7.1"
@@ -4346,24 +4346,6 @@
       "resolved": "https://registry.npmjs.org/negotiator/-/negotiator-0.6.1.tgz",
       "integrity": "sha1-KzJxhOiZIQEXeyhWP7XnECrNDKk=",
       "dev": true
-    },
-    "ngx-bootstrap": {
-      "version": "2.0.3",
-      "resolved": "https://registry.npmjs.org/ngx-bootstrap/-/ngx-bootstrap-2.0.3.tgz",
-      "integrity": "sha512-SdtOQeQrT2BW5mUbzotZF8S55QaAYOBT7orrl2Pi/U5mCVH4U7YJIaN7yNzMfjGsYINmBOSY8Zi1MBUC1UzbWg=="
-    },
-    "ngx-clipboard": {
-      "version": "10.0.0",
-      "resolved": "https://registry.npmjs.org/ngx-clipboard/-/ngx-clipboard-10.0.0.tgz",
-      "integrity": "sha1-H6y6SNsv/nLw95daUK1qvhQpNzo=",
-      "requires": {
-        "ngx-window-token": "0.0.4"
-      }
-    },
-    "ngx-window-token": {
-      "version": "0.0.4",
-      "resolved": "https://registry.npmjs.org/ngx-window-token/-/ngx-window-token-0.0.4.tgz",
-      "integrity": "sha1-R+eqpGVBHEq197oXYBvFk8lWxzY="
     },
     "no-case": {
       "version": "2.3.1",
