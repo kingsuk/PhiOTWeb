@@ -46,7 +46,7 @@ export class NewDeviceComponent implements OnInit {
       this.showAcknowledgement("All fields are required.");
       return;
     }
-    if(this.DeviceName.length<3){
+    if(this.DeviceName.trim().length<3){
       this.showAcknowledgement("Name should be atleast 3 characters long.");
       return;
     }

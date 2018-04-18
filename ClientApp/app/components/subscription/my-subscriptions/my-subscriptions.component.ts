@@ -16,18 +16,100 @@ export class MySubscriptionsComponent implements OnInit {
   token = localStorage.getItem('token');
   private headers = new Headers({'Authorization': 'Bearer '+this.token});
   
-  toggleFlag1= true;
-  //modalRef: BsModalRef;
+  subscriptions:any = [{
+    id:0,
+    subscriptionName : '',
+    subscriptionType : 0,
+    createdDate:'',
+    modifiedDate:''
+  }];
 
   constructor(public http: Http,private router: Router,
-    //private modalService: BsModalService
+   
   ) { }
 
   ngOnInit() {
+    
+    this.getAllSubscriptions();
+  }
+
+  getAllSubscriptions(){
+    this.http.get('api/Subscription/GetSubscriptionById',{headers:this.headers}).subscribe((result:any) => {
+      var jsonObject = JSON.parse(result._body);
+      this.subscriptions = jsonObject;
+      console.log(jsonObject);
+    } , (error) => this.error(error));
+  }
+
+  deleteSubscription(id:number){
+    
+    let body = `id=${id}`;
+    this.http.get('api/Subscription/DeleteSubscriptionByUserIdAndDeviceId?'+body,{headers:this.headers}).subscribe((result:any) => {
+      var jsonObject = JSON.parse(result._body);
+      this.showAcknowledgementSuccess(jsonObject.statusMessage);
+      console.log(jsonObject);
+      this.getAllSubscriptions();
+    } , (error) => this.error(error));
   }
   
-  buyButton() {
-    //this.modalRef = this.modalService.show(template);
+
+  error(error: any) {
+    console.log(error);
+    if (error.status == 403) {
+
+      var jsonObject = JSON.parse(error._body);
+      this.showAcknowledgement(jsonObject.statusMessage);
+    } else if (error.status == 400) {
+      var jsonObject = JSON.parse(error._body);
+
+
+      for (var key in jsonObject) {
+
+        this.showAcknowledgement(jsonObject[key]);
+      }
+    }
+    else
+    {
+      var jsonObject = JSON.parse(error._body);
+      this.showAcknowledgement(jsonObject.statusMessage);
+    }
   }
+
+  getSubscriptionName(subscriptionType: number)
+    {
+        if(subscriptionType==1)
+        {
+            return "Free";
+        }
+        else if(subscriptionType==2)
+        {
+            return "Dev";
+        }
+        else if(subscriptionType==3)
+        {
+            return "Pro";
+        }
+    }
+
+  statusMessage:string = "";
+  statusMessageSuccess:string = "";
+  
+  showAcknowledgement(statusMessage:any){
+        console.log(statusMessage);
+        this.statusMessage = statusMessage;
+        
+        let x: HTMLElement = document.getElementById("snackbar") as HTMLElement;
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    showAcknowledgementSuccess(statusMessage:any){
+        console.log(statusMessage);
+        this.statusMessageSuccess = statusMessage;
+        
+        let x: HTMLElement = document.getElementById("snackbarSuccess") as HTMLElement;
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
 
 }

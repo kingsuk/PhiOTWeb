@@ -67,15 +67,44 @@ namespace PhiOTWeb.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
+                //ModelState.AddModelError(string.Empty, "Student Name already exists.");
 
                 long UserID = Convert.ToInt64(User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value);
                 List<Subscriptions> result = con.Subscriptions.FromSql($"[phi].[usp_GetSubscriptionById] {UserID}").ToList();
 
                 return StatusCode(200, result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(403, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("DeleteSubscriptionByUserIdAndDeviceId")]
+        [Authorize]
+        public IActionResult DeleteSubscriptionByUserIdAndDeviceId(Subscriptions subscription)
+        {
+            try
+            {
+                if(subscription.id==0)
+                {
+                    ModelState.AddModelError("id", "Subscription id is mandatory.");
+                    return BadRequest(ModelState);
+                }
+
+                subscription.UserID = Convert.ToInt64(User.Claims.Where(x => x.Type == "user_id").FirstOrDefault().Value);
+                ResultObject result = con.ResultObject.FromSql($"[phi].[usp_DeleteSubscriptionByUserIdAndDeviceId] {subscription.id},{subscription.UserID}").FirstOrDefault();
+
+                if(result.StatusCode>0)
+                {
+                    return StatusCode(200, result);
+                }
+                else
+                {
+                    return StatusCode(200, result);
+                }
+                
             }
             catch (Exception e)
             {

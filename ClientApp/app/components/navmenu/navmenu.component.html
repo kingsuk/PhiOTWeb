@@ -1,45 +1,35 @@
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class='navbar-brand' [routerLink]="['/home']">PhiOTWeb</a>
+            <a class='navbar-brand' [routerLink]="['/dashboard']">PhiOTWeb</a>
         </div>
         <ul class="nav navbar-nav">
             <li [routerLinkActive]="['link-active']">
-                <a [routerLink]="['/home']">
-                    <span class='glyphicon glyphicon-home'></span> Home
+                <a [routerLink]="['/dashboard']">
+                     Dashboard
                 </a>
             </li>
-            <li [routerLinkActive]="['link-active']">
-                <a [routerLink]="['/counter']">
-                    <span class='glyphicon glyphicon-education'></span> Counter
-                </a>
-            </li>
-            <li [routerLinkActive]="['link-active']">
-                <a [routerLink]="['/fetch-data']">
-                    <span class='glyphicon glyphicon-th-list'></span> Fetch data
-                </a>
-            </li>
-          <li [routerLinkActive]="['link-active']">
-                <a [routerLink]="['/subscriptions']">
-                    <span class='glyphicon glyphicon-th-list'></span> Subscriptions
-                </a>
-            </li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right" *ngIf="email ? false : true">
             
-            <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            <li [routerLinkActive]="['link-active']">
+                <a [routerLink]="['/subscriptions']">
+                    All Subscriptions
+                </a>
+            </li>
+
+            <li [routerLinkActive]="['link-active']">
+                <a [routerLink]="['/subscription/mysubscriptions']">
+                    My Subscriptions
+                </a>
+            </li>
         </ul>
-        <ul class="nav navbar-nav navbar-right" *ngIf="email ? true : false">
+       
+        <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{email}}<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                      <li><a class="glyphicon glyphicon-user" href="#">Profile</a></li>
-                      <li><a href="#">Settings</a></li>
-                      <li><a href="#">Billing</a></li>
                       <li><a class="glyphicon glyphicon-off" [routerLink]="['/auth']">Logout</a></li>
                     </ul>
-                /li>
+                </li>
                 
             </ul>
     </div>

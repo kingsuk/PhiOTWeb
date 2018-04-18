@@ -35,7 +35,7 @@ export class AuthComponent {
         }
         else
         {
-            if(this.password.length<6)
+            if(this.password.trim().length<6)
             {
                 this.showAcknowledgement("Password has to be more than 6 character long.");
                 

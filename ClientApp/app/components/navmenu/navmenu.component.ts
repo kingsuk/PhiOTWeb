@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class NavMenuComponent {
 
-    email : any = localStorage.getItem('user_email');
+    email : any = "";
 
     constructor(private router: Router) {
         
@@ -20,6 +20,7 @@ export class NavMenuComponent {
         if(!localStorage.getItem('token'))
         {
             this.router.navigate(['/auth']);
+            return;
         }
         else
         {

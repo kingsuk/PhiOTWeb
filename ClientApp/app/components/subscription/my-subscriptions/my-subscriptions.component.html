@@ -1,29 +1,26 @@
-<a class="btn btn-lg btn-block btn-success" data-toggle="modal" data-target="#createSubscriptionModal" (click)="buyButton()">BUY NOW!</a>
-<!-- Modal -->
-<div id="createSubscriptionModal" class="modal fade" role="dialog">
-	<div class="modal-dialog modal-sm">
-  
-	  <!-- Modal content-->
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <button type="button" class="close" data-dismiss="true">&times;</button>
-		  <h4 class="modal-title">New Subscription</h4>
-		</div>
-		<div class="modal-body">
-			<form>
-				<div class="form-group">
-					<label>Subscription Name:</label>
-					<input type="text" class="form-control" [(ngModel)]="subscriptionName" name="subscriptionName">
-				</div>
-				
-				<br>
-				<div class="form-group">
-					<button class="btn btn-block btn-primary" data-dismiss="modal" (click)="createNewSubscription()">Create</button>
-				</div>
-				<br>
-			</form>
-		</div>
-	  </div>
-  
-	</div>
-  </div>
+<div class="container">
+    <div class="row">
+            <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Subscription Name</th>
+                        <th scope="col">Subscription Type</th>
+                        <th scope="col">Created Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of subscriptions; let i = index">
+                        <th scope="row">{{i+1}}</th>
+                        <td>{{item.subscriptionName}}</td>
+                        <td>{{getSubscriptionName(item.subscriptionType)}}</td>
+                        <td>{{item.createdDate}}</td>
+                        <td><button class="btn btn-danger btn-sm" title="delete" (click)="deleteSubscription(item.id)"><span class="glyphicon glyphicon-trash"></span></button></td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+    </div>
+</div>
+<div id="snackbar">{{statusMessage}}</div>
+<div id="snackbarSuccess">{{statusMessageSuccess}}</div>

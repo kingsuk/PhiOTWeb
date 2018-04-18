@@ -99,6 +99,11 @@ export class DashboardComponent implements OnInit {
         this.showAcknowledgement(jsonObject[key]);
       }
     }
+    else
+    {
+      var jsonObject = JSON.parse(error._body);
+      this.showAcknowledgement(jsonObject.statusMessage);
+    }
   }
   
   statusMessage:string = "";

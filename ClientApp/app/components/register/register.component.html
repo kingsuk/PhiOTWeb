@@ -13,15 +13,15 @@
                         <form class="login-form">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Username">
+                                    <input type="email" name="email" [(ngModel)]="email" class="form-control" placeholder="Email">
                                     <span class="input-group-addon">
-                                        <i class="glyphicon glyphicon-user"></i>
+                                        <i class="glyphicon glyphicon-envelope"></i>
                                     </span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="password" class="form-control" placeholder="Confirm Password">
+                                    <input type="password" name="password" [(ngModel)]="password" class="form-control" placeholder="Password">
                                     <span class="input-group-addon">
                                         <i class="glyphicon glyphicon-lock"></i>
                                     </span>
@@ -29,15 +29,16 @@
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="email" class="form-control" placeholder="Email">
+                                    <input type="password" name="confirmPassword" [(ngModel)]="confirmPassword" class="form-control" placeholder="Confirm Password">
                                     <span class="input-group-addon">
-                                        <i class="glyphicon glyphicon-envelope"></i>
+                                        <i class="glyphicon glyphicon-lock"></i>
                                     </span>
                                 </div>
                             </div>
+                            
 
                             <div class="form-group sign-btn">
-                                <input type="submit" class="btn" value="Sign up">
+                                <input type="submit" class="btn" (click)="register()" value="Sign up">
                                 <br><br>
                                 <p>You have already Account So <a [routerLink]="['/auth']" id="unflip-btn" class="signup">Log in</a></p>
                             </div>
@@ -51,5 +52,5 @@
         </div>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Flip/1.0.18/jquery.flip.js"></script>
-
+<div id="snackbar">{{statusMessage}}</div>
+<div id="snackbarSuccess">{{statusMessageSuccess}}</div>

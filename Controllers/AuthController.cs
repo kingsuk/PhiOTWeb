@@ -115,17 +115,28 @@ namespace PhiOTWeb.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("Register")]
         public IActionResult RegisterUser(Login data)
         {
             try
             {
-                
-                
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
                 TryValidateModel(data);
                 ResultObject result = con.ResultObject.FromSql($"[dbo].[usp_RegisterUser] {data.email}, {BCrypt.Net.BCrypt.HashPassword(data.password)}").FirstOrDefault();
-                return Ok(result);
+                if(result.StatusCode==1)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return StatusCode(409, result);
+                }
+                
             }
             catch(Exception e)
             {
