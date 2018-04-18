@@ -63,7 +63,7 @@ export class DashboardComponent implements OnInit {
     this.http.get(`api/device/DeleteDeviceByDeviceAndUserId?${body}`, { headers: this.headers }).subscribe((result:any) => 
     {
       var jsonResult : any = JSON.parse(result._body);
-      alert(jsonResult.statusMessage);
+      this.showAcknowledgementSuccess(jsonResult.statusMessage);
       this.getAllDevicesByUserId();
     }, (error) => this.error(error));
   }
@@ -89,17 +89,38 @@ export class DashboardComponent implements OnInit {
     if (error.status == 403) {
 
       var jsonObject = JSON.parse(error._body);
-      alert(jsonObject.statusMessage);
+      this.showAcknowledgement(jsonObject.statusMessage);
     } else if (error.status == 400) {
       var jsonObject = JSON.parse(error._body);
 
 
       for (var key in jsonObject) {
 
-        alert(jsonObject[key]);
+        this.showAcknowledgement(jsonObject[key]);
       }
     }
   }
+  
+  statusMessage:string = "";
+  statusMessageSuccess:string = "";
+  
+  showAcknowledgement(statusMessage:any){
+        console.log(statusMessage);
+        this.statusMessage = statusMessage;
+        
+        let x: HTMLElement = document.getElementById("snackbar") as HTMLElement;
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    showAcknowledgementSuccess(statusMessage:any){
+        console.log(statusMessage);
+        this.statusMessageSuccess = statusMessage;
+        
+        let x: HTMLElement = document.getElementById("snackbarSuccess") as HTMLElement;
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
 
 
 

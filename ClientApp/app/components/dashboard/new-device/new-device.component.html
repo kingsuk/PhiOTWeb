@@ -52,7 +52,7 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <button type="button" class="close" id="closeButton" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Create New {{currentDeviceType == 1 ? 'Esp8266 NodeMCU' : 'Esp8266-01' }}</h4>
       </div>
       <div class="modal-body">
@@ -71,7 +71,7 @@
           </div>
           <br>
           <div class="form-group">
-            <button class="btn btn-block btn-primary" data-dismiss="modal" (click)="createNewDevice()">Create</button>
+            <button class="btn btn-block btn-primary" (click)="createNewDevice()">Create</button>
           </div>
           <br>
         </form>
@@ -80,3 +80,8 @@
 
   </div>
 </div>
+
+
+
+<div id="snackbar">{{statusMessage}}</div>
+<div id="snackbarSuccess">{{statusMessageSuccess}}</div>

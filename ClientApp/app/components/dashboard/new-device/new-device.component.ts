@@ -42,6 +42,15 @@ export class NewDeviceComponent implements OnInit {
   
   createNewDevice()
   {
+    if(this.DeviceName.trim()=="" || this.SubscriptionId==0){
+      this.showAcknowledgement("All fields are required.");
+      return;
+    }
+    if(this.DeviceName.length<3){
+      this.showAcknowledgement("Name should be atleast 3 characters long.");
+      return;
+    }
+      
     let body = `DeviceName=${this.DeviceName}&device_type_id=${this.currentDeviceType}&subscription_id=${this.SubscriptionId}`;
     this.http.get('api/Device/AddNewDevice?'+body,{ headers: this.headers }).subscribe((result) => this.createDeviceSuccess(result) , (error) => this.error(error));
     
@@ -59,7 +68,12 @@ export class NewDeviceComponent implements OnInit {
     console.log(result);
         var jsonObject : any = JSON.parse(result._body);
         console.log(jsonObject);
-        alert(jsonObject.statusMessage);
+        this.showAcknowledgementSuccess(jsonObject.statusMessage);
+    
+        let closeElement: HTMLElement = document.getElementById("closeButton") as HTMLElement;
+        //copyText.select();
+        closeElement.click();
+        
         
         if(this.currentDeviceType==1)
         {
@@ -96,7 +110,7 @@ export class NewDeviceComponent implements OnInit {
         {
             
             var jsonObject = JSON.parse(error._body);
-            alert(jsonObject.statusMessage);
+            this.showAcknowledgement(jsonObject.statusMessage);
         }
         else if(error.status == 400)
         {
@@ -105,10 +119,32 @@ export class NewDeviceComponent implements OnInit {
             
             for (var key in jsonObject) {
                 
-                alert(jsonObject[key]);
+                this.showAcknowledgement(jsonObject[key]);
             }
         }
     }
+  
+    statusMessage:string = "";
+    statusMessageSuccess:string = "";
+
+    showAcknowledgement(statusMessage:any){
+          console.log(statusMessage);
+          this.statusMessage = statusMessage;
+
+          let x: HTMLElement = document.getElementById("snackbar") as HTMLElement;
+          x.className = "show";
+          setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+      }
+
+      showAcknowledgementSuccess(statusMessage:any){
+          console.log(statusMessage);
+          this.statusMessageSuccess = statusMessage;
+
+          let x: HTMLElement = document.getElementById("snackbarSuccess") as HTMLElement;
+          x.className = "show";
+          setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+      }
+
 
 }
 
