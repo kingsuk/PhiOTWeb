@@ -1,13 +1,29 @@
-<!-- <button type="button" class="btn btn-primary" (click)="openModal(template1)">Create template modal</button>
- 
-<ng-template #template1>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Modal</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
+<a class="btn btn-lg btn-block btn-success" data-toggle="modal" data-target="#createSubscriptionModal" (click)="buyButton()">BUY NOW!</a>
+<!-- Modal -->
+<div id="createSubscriptionModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-sm">
+  
+	  <!-- Modal content-->
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <button type="button" class="close" data-dismiss="true">&times;</button>
+		  <h4 class="modal-title">New Subscription</h4>
+		</div>
+		<div class="modal-body">
+			<form>
+				<div class="form-group">
+					<label>Subscription Name:</label>
+					<input type="text" class="form-control" [(ngModel)]="subscriptionName" name="subscriptionName">
+				</div>
+				
+				<br>
+				<div class="form-group">
+					<button class="btn btn-block btn-primary" data-dismiss="modal" (click)="createNewSubscription()">Create</button>
+				</div>
+				<br>
+			</form>
+		</div>
+	  </div>
+  
+	</div>
   </div>
-  <div class="modal-body">
-    This is a modal.
-  </div>
-</ng-template> -->

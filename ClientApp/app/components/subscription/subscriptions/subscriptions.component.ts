@@ -57,7 +57,11 @@ export class SubscriptionsComponent implements OnInit {
     var jsonResult : any = JSON.parse(result._body);
     
     alert(jsonResult.statusMessage);
+    
+    let element: HTMLElement = document.getElementsByClassName('close')[0] as HTMLElement;
+    element.click();
     this.router.navigate(['/dashboard']);
+
   }
 
   error(error: any)

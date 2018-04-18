@@ -26,7 +26,13 @@
         <div class="col-lg-6">
 
             <div class="form-group">
-                <button class="btn btn-block btn-success" *ngIf="enableEdit" (click)="saveEditedDataset()">Save Changes</button>
+              
+              <div class="input-group" *ngIf="enableEdit">
+                  <button class="btn btn-block btn-primary"  (click)="saveEditedDataset()">Save Changes</button>
+                  <span class="input-group-btn">
+                      <button class="btn btn-warning" (click)="cancelEdit()" title="Cancel edit">Cancel</button>
+                    </span>
+                </div>
               </div>
 
           <div class="form-group">
@@ -47,7 +53,7 @@
             <div class="input-group">
               <input type="text" class="form-control" [(ngModel)]="device.device_token" disabled>
               <span class="input-group-btn">
-                <!-- <button class="btn btn-default" [class.btn-success]= "isCopied" type="button" ngxClipboard [cbContent]="device.device_token" (cbOnSuccess)="isCopied = true">copy</button> -->
+                <button class="btn btn-default" id="devie_token" [class.btn-success]= "isCopied" (click)="copyToClipBoard($event)" type="button">copy</button>
               </span>
             </div>
           </div>
@@ -139,3 +145,5 @@
 
   </div>
 </div>
+<div id="snackbar">{{statusMessage}}</div>
+<div id="snackbarSuccess">{{statusMessageSuccess}}</div>

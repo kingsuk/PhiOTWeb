@@ -14,6 +14,8 @@ export class NodemcuComponent implements OnInit {
 
     token = localStorage.getItem('token');
     private headers = new Headers({'Authorization': 'Bearer '+this.token});
+    statusMessage:string = "";
+    statusMessageSuccess:string = "";
 
     id = this.route.snapshot.paramMap.get('id');
   
@@ -50,6 +52,24 @@ export class NodemcuComponent implements OnInit {
         let body = `deviceId=${this.id}`;
         this.http.get('api/device/GetDeviceInfoByDeviceId?'+body,{ headers: this.headers }).subscribe((result) => this.success(result) , (error) => this.error(error));
         this.getAllDatasets();
+    }
+
+    showAcknowledgement(statusMessage:any){
+        console.log(statusMessage);
+        this.statusMessage = statusMessage;
+        
+        let x: HTMLElement = document.getElementById("snackbar") as HTMLElement;
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    showAcknowledgementSuccess(statusMessage:any){
+        console.log(statusMessage);
+        this.statusMessageSuccess = statusMessage;
+        
+        let x: HTMLElement = document.getElementById("snackbarSuccess") as HTMLElement;
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
     }
 
     success(result : any) : any {
@@ -90,6 +110,13 @@ export class NodemcuComponent implements OnInit {
         
     }
 
+    copyToClipBoard($event:any){
+        let copyText: HTMLElement = document.getElementById("devie_token") as HTMLElement;
+        //copyText.select();
+        $event.target.select();
+        document.execCommand("Copy");
+    }
+
     publish(dataset:any)
     {
         //alert(dataset);
@@ -98,7 +125,7 @@ export class NodemcuComponent implements OnInit {
         console.log(message);
         if(message.length==0)
         {
-            alert("Nothing has changed.");
+            this.showAcknowledgement("Nothing has changed.");
             return;
         }
         let jsonData = [{
@@ -115,7 +142,7 @@ export class NodemcuComponent implements OnInit {
         let body = `token=${this.device.device_token}&message=${JSON.stringify(jsonData)}`;
         this.http.get('api/publish/sendToDevice?'+body,{headers: this.headers} ).subscribe((result:any) => {
             var jsonResult : any = JSON.parse(result._body);
-            alert(jsonResult.statusMessage);
+            this.showAcknowledgementSuccess(jsonResult.statusMessage);
         }, (error) => this.error(error));
     }
     station()
@@ -124,8 +151,9 @@ export class NodemcuComponent implements OnInit {
             header: "station"
         }];
         let body = `token=${this.device.device_token}&message=${JSON.stringify(stationConfig)}`;
-        this.http.get('api/publish/sendToDevice?'+body,{headers: this.headers} ).subscribe(result => {
-            console.log(result);
+        this.http.get('api/publish/sendToDevice?'+body,{headers: this.headers} ).subscribe((result:any) => {
+            var jsonResult : any = JSON.parse(result._body);
+            this.showAcknowledgementSuccess(jsonResult.statusMessage);
         }, (error) => this.error(error));
     }
   
@@ -136,7 +164,7 @@ export class NodemcuComponent implements OnInit {
         console.log("message",message);
         if(message.length==0)
         {
-            alert("Nothing has changed.");
+            this.showAcknowledgement("Nothing has changed.");
             return;
         }
         
@@ -155,7 +183,7 @@ export class NodemcuComponent implements OnInit {
         let body = `ds_name=${this.datasetName}&ds_deviceId=${this.device.id}&jsonData=${JSON.stringify(jsonData)}&reverseJsonData=${JSON.stringify(reverseJsonData)}`;
         this.http.get('api/dataset/CreateNewDataset?'+body,{headers: this.headers} ).subscribe((result:any) => {
             var jsonResult : any = JSON.parse(result._body);
-            alert(jsonResult.statusMessage);
+            this.showAcknowledgementSuccess(jsonResult.statusMessage);
             this.getAllDatasets();
         }, (error) => this.error(error));
     }
@@ -187,7 +215,7 @@ export class NodemcuComponent implements OnInit {
         //debugger;
         if(JSON.stringify(this.editableJsonData)==JSON.stringify(message))
         {
-            alert("Nothing has changed.");
+            this.showAcknowledgement("Nothing has changed.");
             return;
         }
         let reverseMessage = this.reverseJsonData(message);
@@ -205,9 +233,14 @@ export class NodemcuComponent implements OnInit {
         let body = `ds_id=${this.editId}&jsonData=${JSON.stringify(jsonData)}&reverseJsonData=${JSON.stringify(reverseJsonData)}`;
         this.http.get('api/dataset/EditDatasetByDsIdAndUserId?'+body,{headers: this.headers} ).subscribe((result:any) => {
             var jsonResult : any = JSON.parse(result._body);
-            alert(jsonResult.statusMessage);
+            this.showAcknowledgementSuccess(jsonResult.statusMessage);
             this.getAllDatasets();
         }, (error) => this.error(error));
+    }
+
+    cancelEdit(){
+        this.enableEdit = false;
+        this.setToAllOff(this.currentConfig);
     }
 
     deleteDataset(id:number)
@@ -215,7 +248,7 @@ export class NodemcuComponent implements OnInit {
         let body = `ds_id=${id}`;
         this.http.get('api/dataset/DeleteDatasetByDsIdAndUserId?'+body,{headers: this.headers} ).subscribe((result:any) => {
             var jsonResult : any = JSON.parse(result._body);
-            alert(jsonResult.statusMessage);
+            this.showAcknowledgementSuccess(jsonResult.statusMessage);
             this.getAllDatasets();
         }, (error) => this.error(error));
     }
@@ -227,7 +260,7 @@ export class NodemcuComponent implements OnInit {
         {
             
             var jsonObject = JSON.parse(error._body);
-            alert(jsonObject.statusMessage);
+            this.showAcknowledgement(jsonObject.statusMessage);
         }
         else if(error.status == 400)
         {
@@ -236,7 +269,7 @@ export class NodemcuComponent implements OnInit {
             
             for (var key in jsonObject) {
                 
-                alert(jsonObject[key]);
+                this.showAcknowledgement(jsonObject[key]);
             }
         }
     }
@@ -289,6 +322,8 @@ export class NodemcuComponent implements OnInit {
         }
         return obj;
     }
+
+    
 
     currentConfig = [{
         name: "D0",

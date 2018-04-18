@@ -16,6 +16,7 @@ export class MySubscriptionsComponent implements OnInit {
   token = localStorage.getItem('token');
   private headers = new Headers({'Authorization': 'Bearer '+this.token});
   
+  toggleFlag1= true;
   //modalRef: BsModalRef;
 
   constructor(public http: Http,private router: Router,
@@ -25,7 +26,7 @@ export class MySubscriptionsComponent implements OnInit {
   ngOnInit() {
   }
   
-  openModal(template: TemplateRef<any>) {
+  buyButton() {
     //this.modalRef = this.modalService.show(template);
   }
 

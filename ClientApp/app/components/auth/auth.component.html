@@ -37,6 +37,8 @@
                                     <p><a href="#" class="forgot">Can't access your account?</a></p>
                                     <p><strong>New to PhiOT?</strong><br><a [routerLink]="['/register']" id="flip-btn" class="signup signup_link">Sign up for a new account</a></p>
                                 </div>
+
+                                <div id="snackbar" error>{{statusMessage}}</div>
                             </form>
                         </div>
                         
@@ -45,5 +47,6 @@
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Flip/1.0.18/jquery.flip.js"></script>
+
+
 

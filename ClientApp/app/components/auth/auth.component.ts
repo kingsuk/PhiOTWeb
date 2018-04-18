@@ -13,10 +13,11 @@ export class AuthComponent {
     email: string = "";
     password: string = "";
     
+    statusMessage:string="";
 
     private headers = new Headers({'Content-Type': 'application/x-www-form-urlencoded'});
 
-    @Inject('BASE_URL') baseUrl: string;
+
 
     constructor(public http: Http,private router: Router) {
         
@@ -30,20 +31,21 @@ export class AuthComponent {
         let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
         if(!EMAIL_REGEXP.test(this.email))
         {
-            alert("Email is not valid");
+            this.showAcknowledgement("Email is not valid");
         }
         else
         {
             if(this.password.length<6)
             {
-                alert("Password has to be more than 6 character long.");
+                this.showAcknowledgement("Password has to be more than 6 character long.");
+                
             }
             else
             {
                 let body = `email=${this.email}&password=${this.password}`;
 
                 this.http.get('api/auth/AuthAttempt?'+body,
-                { headers: this.headers }).subscribe((result) => this.success(result) , this.error);
+                { headers: this.headers }).subscribe((result) => this.success(result) , (error) => this.error(error));
             }
         }
     }
@@ -56,7 +58,7 @@ export class AuthComponent {
         localStorage.setItem('user_email', jsonObject.email);
         localStorage.setItem('token', jsonObject.token);
         
-
+        this.showAcknowledgement("Login Successful...");
         this.router.navigate(['/dashboard']);
     }
 
@@ -69,7 +71,7 @@ export class AuthComponent {
         {
             
             var jsonObject = JSON.parse(error._body);
-            alert(jsonObject.statusMessage);
+            this.showAcknowledgement(jsonObject.statusMessage);
         }
         else if(error.status == 400)
         {
@@ -78,9 +80,17 @@ export class AuthComponent {
             
             for (var key in jsonObject) {
                 
-                alert(jsonObject[key]);
+                this.showAcknowledgement(jsonObject[key]);
             }
         }
+    }
+
+    showAcknowledgement(statusMessage:any){
+        this.statusMessage = statusMessage;
+        
+        let x: HTMLElement = document.getElementById("snackbar") as HTMLElement;
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
     }
     
     
