@@ -1,3 +1,151 @@
-<p>
-  Currently not supported
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-5">
+      <div class="row">
+        <div class="col-lg-8">
+          <img src="../../../assests/img/2.png" width="100%" />
+        </div>
+        <div class="col-lg-4" style="padding-top: 14%;">
+          <div class="row" *ngFor="let item of currentConfig" style="line-height: 215%;">
+
+            <div style="display: inline-block; width: 50px">{{item.name}}</div>
+            <span *ngIf="item.value == '2' ? false: true">
+                <button type="button" class="btn btn-sm btn-toggle {{item.value?'active':''}}" (click)="toggleChild(item.name)">
+                    <div class="handle"></div>
+                </button>
+              </span>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-7">
+      <div class="row">
+        <div class="col-lg-6">
+          
+          <div class="row"  *ngIf="enableEdit">
+            <div class="col-lg-6">
+              
+                  <button class="btn btn-block btn-primary"  (click)="saveEditedDataset()">Save Changes</button>
+                  
+            </div>
+            <div class="col-lg-6">
+              <button class="btn btn-warning btn-block" (click)="cancelEdit()" title="Cancel edit">Cancel</button>
+            </div>
+          </div>
+            
+
+          <div class="form-group">
+
+            <label for="usr">Device Name: </label>
+            <div class="input-group">
+              <input type="text" class="form-control" [(ngModel)]="device.deviceName" disabled>
+              <span class="input-group-btn">
+                <button class="btn btn-default">Change</button>
+              </span>
+            </div>
+          </div>
+
+
+
+          <div class="form-group">
+            <label for="usr">Device Token: </label>
+            <div class="input-group">
+              <input type="text" class="form-control" [(ngModel)]="device.device_token" disabled>
+              <span class="input-group-btn">
+                <button class="btn btn-default" id="devie_token" [class.btn-success]= "isCopied" (click)="copyToClipBoard($event)" type="button">copy</button>
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            
+            <button class="btn btn-block btn-info" (click)="DirectPublish(currentConfig)">Send</button>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="form-group">
+            <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#createButtonModal">Save New</button>
+          </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+            <button class="btn btn-block btn-warning" (click)="station()">Station</button>
+          </div>
+            </div>
+            
+          </div>
+          
+          
+          
+
+        </div>
+        <div class="col-lg-6">
+          <label>Saved Datasets:</label>
+          <div class="customback" style="overflow: auto; height: 500px">
+            <div *ngFor="let item of dataSet">
+              <div *ngIf="item.ds_id?true:false" class="customMargin">
+                  <div class="row">
+                      <div class="col-lg-8">
+                        <label>{{item.ds_name}}:</label>
+                      </div>
+                      <div class="col-lg-2">
+                          <span class="glyphicon glyphicon-edit cursor" title="edit" (click)="editDataset(item.ds_id,item.jsonData)"></span>
+                        </div>
+                        <div class="col-lg-2">
+                            <span class="glyphicon glyphicon-trash cursor" title="delete" (click)="deleteDataset(item.ds_id)"></span>
+                          </div>
+                    </div>
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <button class="btn btn-block btn-info" (click)="publishToMqtt(item.jsonData)">ON</button>
+                    </div>
+                    <div class="col-lg-6">
+                      <button class="btn btn-block btn-danger" (click)="publishToMqtt(item.reverseJsonData)">OFF</button>
+                    </div>
+                  </div>
+              </div>
+              
+            </div>
+            
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="createButtonModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create New Dataset</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label>Dataset Name:</label>
+            <input type="text" class="form-control" [(ngModel)]="datasetName" name="datasetName" required>
+          </div>
+
+          <br>
+          <div class="form-group">
+            <button class="btn btn-block btn-primary" data-dismiss="modal" (click)="createDataset()">Create</button>
+          </div>
+          <br>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div id="snackbar">{{statusMessage}}</div>
+<div id="snackbarSuccess">{{statusMessageSuccess}}</div>

@@ -136,6 +136,26 @@ export class NodemcuComponent implements OnInit {
         
         this.publishToMqtt(jsonData);
     }
+  
+    DirectPublish(dataset:any)
+    {
+        //alert(dataset);
+        
+//         let message = this.compareDifferencr(dataset,this.defaultConfig);
+//         console.log(message);
+//         if(message.length==0)
+//         {
+//             this.showAcknowledgement("Nothing has changed.");
+//             return;
+//         }
+        let jsonData = [{
+                header: "data",
+                data: dataset
+            }
+        ];
+        
+        this.publishToMqtt(jsonData);
+    }
 
     publishToMqtt(jsonData:any)
     {
