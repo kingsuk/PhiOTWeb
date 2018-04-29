@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhiOTWeb.Models;
+using PhiOTWeb.Models.Usp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,8 @@ namespace PhiOTWeb.Data
         public virtual DbSet<Subscriptions> Subscriptions { get; set; }
         public virtual DbSet<PublishLog> PublishLog { get; set; }
         public virtual DbSet<Dataset> Dataset { get; set; }
+
+        public virtual DbSet<usp_GetDeviceInfoByDeviceId> usp_GetDeviceInfoByDeviceId { get; set; }
 
     }
 }

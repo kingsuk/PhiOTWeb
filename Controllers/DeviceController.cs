@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PhiOTWeb.Data;
 using PhiOTWeb.Models;
+using PhiOTWeb.Models.Usp;
 
 namespace PhiOTWeb.Controllers
 {
@@ -101,11 +102,15 @@ namespace PhiOTWeb.Controllers
             try
             {
 
-                Device result = con.Device.FromSql($"[phi].[usp_GetDeviceInfoByDeviceId] {deviceId}").FirstOrDefault();
+                usp_GetDeviceInfoByDeviceId result = con.usp_GetDeviceInfoByDeviceId.FromSql($"[phi].[usp_GetDeviceInfoByDeviceId] {deviceId}").FirstOrDefault();
                 int days = DateTime.Now.Subtract(result.SubscriptionModifiedDate).Days;
                 if (days>result.validity)
                 {
                     return StatusCode(403, "Your subscription has expired!");
+                }
+                else if(result.LogCountToday > result.apiCallsPerDay)
+                {
+                    return StatusCode(403,"Your call limit for today has finished.");
                 }
 
                 return StatusCode(200, result);
