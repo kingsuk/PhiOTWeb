@@ -14,7 +14,8 @@ export class DashboardComponent implements OnInit {
   devices = [{
     deviceName: "",
     id: 0,
-    device_type_id: 0
+    device_type_id: 0,
+    device_token: "",
   }];
 
   private headers = new Headers({
