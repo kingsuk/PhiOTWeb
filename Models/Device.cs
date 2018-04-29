@@ -24,6 +24,10 @@ namespace PhiOTWeb.Models
         [Required]
         public Nullable<long> subscription_id { get; set; }
         public string device_token { get; set; }
-        
+        public System.DateTime SubscriptionModifiedDate { get; set; }
+        public Nullable<long> apiCallsPerDay { get; set; }
+        public Nullable<int> validity { get; set; }
+        public Nullable<int> LogCountToday { get; set; }
+
     }
 }

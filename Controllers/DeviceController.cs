@@ -102,6 +102,11 @@ namespace PhiOTWeb.Controllers
             {
 
                 Device result = con.Device.FromSql($"[phi].[usp_GetDeviceInfoByDeviceId] {deviceId}").FirstOrDefault();
+                int days = DateTime.Now.Subtract(result.SubscriptionModifiedDate).Days;
+                if (days>result.validity)
+                {
+                    return StatusCode(403, "Your subscription has expired!");
+                }
 
                 return StatusCode(200, result);
             }
