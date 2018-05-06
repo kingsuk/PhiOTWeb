@@ -134,7 +134,7 @@ export class NodemcuComponent implements OnInit {
             }
         ];
         
-        this.publishToMqtt(jsonData);
+        this.publishToMqtt(JSON.stringify(jsonData));
     }
   
     DirectPublish(dataset:any)
@@ -154,12 +154,14 @@ export class NodemcuComponent implements OnInit {
             }
         ];
         
-        this.publishToMqtt(jsonData);
+        this.publishToMqtt(JSON.stringify(jsonData));
     }
 
     publishToMqtt(jsonData:any)
     {
-        let body = `token=${this.device.device_token}&message=${JSON.stringify(jsonData)}`;
+      console.log(JSON.parse(jsonData));
+      //return;
+        let body = `token=${this.device.device_token}&message=${jsonData}`;
         this.http.get('api/publish/sendToDevice?'+body,{headers: this.headers} ).subscribe((result:any) => {
             var jsonResult : any = JSON.parse(result._body);
             this.showAcknowledgementSuccess(jsonResult.statusMessage);
