@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -46,6 +46,78 @@ namespace PhiOTWeb.Controllers
         [HttpGet]
         [Route("AuthAttempt")]
         public IActionResult AuthAttempt(Login login)
+        {
+            try
+            {
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                Login result = con.Login.FromSql($"[dbo].[usp_CheckUser] {login.email}").FirstOrDefault();
+
+                if(result != null)
+                {
+                    if(BCrypt.Net.BCrypt.Verify(login.password, result.password))
+                    {
+                        ResultObject resultObject = new ResultObject()
+                        {
+                            StatusCode = 1,
+                            StatusMessage = "Login successful.",
+                        };
+
+                        //return Ok(resultObject);
+
+                        var claims = new[]
+                        {
+                            new Claim("user_email", result.email),
+                            new Claim("user_id", result.UserID.ToString())
+                        };
+
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+                        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                        //var token = new JwtSecurityToken(
+                        //    claims: claims,
+                        //    expires: DateTime.Now.AddMinutes(30),
+                        //    signingCredentials: creds
+                        //  );
+
+                       
+                        var token = new JwtSecurityToken(
+                            issuer: _config["Jwt:Issuer"],
+                            audience: _config["Jwt:Issuer"],
+                            claims: claims,
+                            notBefore: DateTime.Now,
+                            expires: DateTime.Now.AddDays(30),
+                            signingCredentials: creds
+                        );
+
+                        return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) , email = login.email });
+
+                    }
+                    else
+                    {
+                        return StatusCode(403,new ResultObject() { StatusMessage = "Invalid user name or password." });
+                    }
+                    
+                }
+                else
+                {
+                    return StatusCode(403, new ResultObject() { StatusMessage = "You are not registered with us. Please register." });
+                }
+                
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+        
+        [HttpGet]
+        [Route("AuthAttempt2")]
+        public IActionResult AuthAttempt2(Login login)
         {
             try
             {

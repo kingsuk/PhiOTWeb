@@ -38,7 +38,7 @@
 					<li class="list-group-item"><i class="icon-ok text-info"></i> 27/7 Support</li>
 				</ul>
 				<div class="panel-footer">
-					<a class="btn btn-lg btn-block btn-info" data-toggle="modal" data-target="#createSubscriptionModal" (click)="buyButton(item.id)">BUY NOW!</a>
+					<button class="btn btn-lg btn-block btn-info" data-toggle="modal" data-target="#createSubscriptionModal" (click)="buyButton(item.id)" disabled>BUY NOW!</button>
 				</div>
 			</div>
 			<!-- /PRICE ITEM -->
@@ -58,8 +58,9 @@
 					<li class="list-group-item"><i class="icon-ok text-success"></i> 27/7 Support</li>
 				</ul>
 				<div class="panel-footer">
-					<a class="btn btn-lg btn-block btn-success" data-toggle="modal" data-target="#createSubscriptionModal" (click)="buyButton(item.id)">BUY NOW!</a>
-				</div>
+					<button class="btn btn-lg btn-block btn-success" data-toggle="modal" data-target="#createSubscriptionModal" (click)="buyButton(item.id)" disabled>BUY NOW!</button>
+				  
+        </div>
 			</div>
 			<!-- /PRICE ITEM -->
 

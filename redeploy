@@ -1,0 +1,7 @@
+echo "Re-deploying your application"
+sudo systemctl stop kestrel-aspnetcoredemo.service
+dotnet publish
+rm -rf /var/aspnetcoredemo/
+cp -a /root/Project/PhiOTWeb/bin/Debug/netcoreapp2.0/publish/ /var/aspnetcoredemo/
+sudo systemctl enable kestrel-aspnetcoredemo.service
+sudo systemctl start kestrel-aspnetcoredemo.service
