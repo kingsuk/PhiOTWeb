@@ -1,45 +1,24 @@
 from django.urls import path
 
-from . import views
+from . import web_views
 
 urlpatterns = [
-    # Auth — matches original casing used by Angular
-    path('auth/test', views.auth_test),
-    path('auth/AuthAttempt', views.auth_attempt),
-    path('auth/Register', views.register_user),
-
-    # Device
-    path('Device/AddNewDevice', views.add_new_device),
-    path('device/AddNewDevice', views.add_new_device),
-    path('device/DeleteDeviceByDeviceAndUserId', views.delete_device),
-    path('device/GetAllDevicesByUser', views.get_all_devices_by_user),
-    path('device/GetDeviceInfoByDeviceId', views.get_device_info_by_device_id),
-
-    # Dataset
-    path('Dataset/GetAllDataset', views.get_all_datasets),
-    path('dataset/GetAllDataset', views.get_all_datasets),
-    path('Dataset/GetAllDatasetByUserIdAndDeviceId', views.get_datasets_by_user_and_device),
-    path('dataset/GetAllDatasetByUserIdAndDeviceId', views.get_datasets_by_user_and_device),
-    path('Dataset/CreateNewDataset', views.create_new_dataset),
-    path('dataset/CreateNewDataset', views.create_new_dataset),
-    path('Dataset/EditDatasetByDsIdAndUserId', views.edit_dataset),
-    path('dataset/EditDatasetByDsIdAndUserId', views.edit_dataset),
-    path('Dataset/DeleteDatasetByDsIdAndUserId', views.delete_dataset),
-    path('dataset/DeleteDatasetByDsIdAndUserId', views.delete_dataset),
-
-    # Publish
-    path('publish/GetAllPublishLog', views.get_all_publish_log),
-    path('publish/GetPublishLogByUserId', views.get_publish_log_by_user_id),
-    path('publish/GetPublishLogByUserToken', views.get_publish_log_by_user_token),
-    path('publish/sendToDevice', views.send_to_device),
-
-    # Subscription
-    path('Subscription/GetAllSubscriptionTypes', views.get_all_subscription_types),
-    path('subscription/GetAllSubscriptionTypes', views.get_all_subscription_types),
-    path('Subscription/AddNewSubscription', views.add_new_subscription),
-    path('subscription/AddNewSubscription', views.add_new_subscription),
-    path('Subscription/GetSubscriptionById', views.get_subscription_by_user),
-    path('subscription/GetSubscriptionById', views.get_subscription_by_user),
-    path('Subscription/DeleteSubscriptionByUserIdAndDeviceId', views.delete_subscription),
-    path('subscription/DeleteSubscriptionByUserIdAndDeviceId', views.delete_subscription),
+    path('', web_views.home, name='home'),
+    path('auth/', web_views.login_view, name='login'),
+    path('register/', web_views.register_view, name='register'),
+    path('logout/', web_views.logout_view, name='logout'),
+    path('dashboard/', web_views.dashboard, name='dashboard'),
+    path('dashboard/new-device/', web_views.new_device, name='new_device'),
+    path('device/<int:device_id>/delete/', web_views.delete_device_view, name='delete_device'),
+    path('device/nodemcu/<int:device_id>/', web_views.device_nodemcu, name='device_nodemcu'),
+    path('device/esp01/<int:device_id>/', web_views.device_esp, name='device_esp'),
+    path('device/<int:device_id>/publish/', web_views.device_publish, name='device_publish'),
+    path('device/<int:device_id>/station/', web_views.device_station, name='device_station'),
+    path('device/<int:device_id>/dataset/create/', web_views.create_dataset, name='create_dataset'),
+    path('device/<int:device_id>/dataset/<int:dataset_id>/edit/', web_views.edit_dataset, name='edit_dataset'),
+    path('device/<int:device_id>/dataset/<int:dataset_id>/delete/', web_views.delete_dataset, name='delete_dataset'),
+    path('subscriptions/', web_views.subscriptions_list, name='subscriptions'),
+    path('subscription/create/', web_views.create_subscription, name='create_subscription'),
+    path('subscription/mysubscriptions/', web_views.my_subscriptions, name='my_subscriptions'),
+    path('subscription/<int:subscription_id>/delete/', web_views.delete_subscription_view, name='delete_subscription'),
 ]

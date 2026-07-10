@@ -1,0 +1,57 @@
+.device-control { padding-top: 20px; }
+.customback {
+    border-radius: 9px;
+    background: #f5f5f5;
+    padding: 20px;
+}
+.customMargin {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-bottom: dotted #bdc1c8;
+}
+.cursor { cursor: pointer; }
+.dataset-list { overflow: auto; max-height: 500px; }
+
+.device-board {
+    height: 320px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #2c3e50, #1b5a7c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+}
+.esp-board { background: linear-gradient(135deg, #1a6b63, #29b5a8); }
+
+.pin-toggles .pin-row {
+    line-height: 215%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.pin-toggles .pin-label { width: 50px; display: inline-block; }
+
+.btn-toggle {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    border: none;
+    height: 1.5rem;
+    width: 3rem;
+    border-radius: 1.5rem;
+    background: #bdc1c8;
+}
+.btn-toggle > .handle {
+    position: absolute;
+    top: 0.1875rem;
+    left: 0.1875rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 1.125rem;
+    background: #fff;
+    transition: left .25s;
+}
+.btn-toggle.active { background-color: #29b5a8; }
+.btn-toggle.active > .handle { left: 1.6875rem; }
