@@ -4,16 +4,19 @@
 
 {% block content %}
 <div class="container">
-    <div class="page-header">
-        <h1>My subscriptions</h1>
-        <p>Active plans linked to your account</p>
+    <div class="page-header page-header-row">
+        <div>
+            <h1>My subscriptions</h1>
+            <p>Active plans linked to your account</p>
+        </div>
+        <a href="{% url 'subscriptions' %}" class="btn btn-secondary">Browse plans</a>
     </div>
 
+    {% if subscriptions %}
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
                     <th>Name</th>
                     <th>Plan</th>
                     <th>Created</th>
@@ -23,28 +26,28 @@
             <tbody>
                 {% for sub in subscriptions %}
                 <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ sub.subscription_name }}</td>
+                    <td><strong>{{ sub.subscription_name }}</strong></td>
                     <td>
-                        {% if sub.subscription_type_id == 1 %}Free
-                        {% elif sub.subscription_type_id == 2 %}Dev
-                        {% else %}Pro{% endif %}
+                        <span class="pill">{% if sub.subscription_type_id == 1 %}Free{% elif sub.subscription_type_id == 2 %}Dev{% else %}Pro{% endif %}</span>
                     </td>
                     <td>{{ sub.created_date|date:"M d, Y" }}</td>
-                    <td>
-                        <form method="post" action="{% url 'delete_subscription' sub.id %}" onsubmit="return confirm('Delete this subscription?');">
+                    <td class="table-actions">
+                        <form method="post" action="{% url 'delete_subscription' sub.id %}" onsubmit="return confirm('Delete “{{ sub.subscription_name }}”? Devices on this plan must be removed first.');">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-ghost btn-sm">Delete</button>
                         </form>
                     </td>
                 </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" style="color:var(--muted);">No subscriptions yet. <a href="{% url 'subscriptions' %}">Browse plans</a></td>
-                </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    {% else %}
+    <div class="empty-state">
+        <h2>No subscriptions yet</h2>
+        <p>Pick a plan to unlock device registration and MQTT publishing.</p>
+        <a href="{% url 'subscriptions' %}" class="btn btn-primary">Browse plans</a>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

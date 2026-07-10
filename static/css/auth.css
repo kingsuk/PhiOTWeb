@@ -4,8 +4,8 @@
     place-items: center;
     padding: 2rem 1rem;
     background:
-        radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 40%),
-        radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.08), transparent 40%),
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.1), transparent 36%),
+        radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.08), transparent 34%),
         var(--bg);
 }
 
@@ -13,16 +13,25 @@
     width: min(400px, 100%);
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 18px;
     box-shadow: var(--shadow);
     padding: 2rem;
 }
 
+.auth-brand {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+}
+
+.auth-brand span { color: var(--primary); }
+
 .auth-card h1 {
     margin: 0 0 0.35rem;
     font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-weight: 700;
+    letter-spacing: -0.03em;
 }
 
 .auth-card .subtitle {
@@ -30,6 +39,8 @@
     color: var(--muted);
     font-size: 0.9rem;
 }
+
+.auth-card .alert { margin-bottom: 1rem; }
 
 .auth-footer {
     margin-top: 1.25rem;

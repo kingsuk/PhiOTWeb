@@ -4,33 +4,40 @@
 
 {% block content %}
 <div class="container">
+    <div class="breadcrumb">
+        <a href="{% url 'dashboard' %}">Devices</a>
+        <span>/</span>
+        <span>Add device</span>
+    </div>
+
     <div class="page-header">
         <h1>Add device</h1>
-        <p>Select a board type to get started</p>
+        <p>Select a board type, then name it and attach a subscription</p>
     </div>
 
-    <div class="card-grid" style="max-width:640px;">
-        <article class="card" style="text-align:center;">
-            <div class="device-badge nodemcu" style="margin:0 auto 1rem;">MCU</div>
-            <h3 style="margin:0 0 0.5rem;">NodeMCU</h3>
-            <p style="color:var(--muted);font-size:0.9rem;margin:0 0 1rem;">ESP8266 development board</p>
-            <a href="{% url 'new_device' %}?type=1" class="btn btn-primary btn-block">Add NodeMCU</a>
-        </article>
-        <article class="card" style="text-align:center;">
-            <div class="device-badge esp" style="margin:0 auto 1rem;">ESP</div>
-            <h3 style="margin:0 0 0.5rem;">ESP-01</h3>
-            <p style="color:var(--muted);font-size:0.9rem;margin:0 0 1rem;">Compact ESP8266 module</p>
-            <a href="{% url 'new_device' %}?type=2" class="btn btn-primary btn-block">Add ESP-01</a>
-        </article>
+    {% if not show_form %}
+    <div class="card-grid type-picker">
+        <a href="{% url 'new_device' %}?type=1" class="card type-card">
+            <div class="device-badge nodemcu">MCU</div>
+            <h3>NodeMCU</h3>
+            <p>ESP8266 development board with D0–D10 GPIO pins</p>
+        </a>
+        <a href="{% url 'new_device' %}?type=2" class="card type-card">
+            <div class="device-badge esp">ESP</div>
+            <h3>ESP-01</h3>
+            <p>Compact ESP8266 module with GPIO 0 and GPIO 2</p>
+        </a>
     </div>
-</div>
-
-{% if show_form and form %}
-<div class="modal-backdrop" id="addDeviceModal">
-    <div class="modal" role="dialog">
-        <div class="modal-header">
-            <h2>New {{ device_type_name }}</h2>
-            <a href="{% url 'new_device' %}" class="modal-close">&times;</a>
+    {% else %}
+    <div class="form-panel">
+        <div class="form-panel-header">
+            <div class="device-badge {% if device_type_id == 1 %}nodemcu{% else %}esp{% endif %}">
+                {% if device_type_id == 1 %}MCU{% else %}ESP{% endif %}
+            </div>
+            <div>
+                <h2>{{ device_type_name }}</h2>
+                <a href="{% url 'new_device' %}">Change board type</a>
+            </div>
         </div>
         <form method="post">
             {% csrf_token %}
@@ -38,15 +45,20 @@
             <div class="form-group">
                 <label for="{{ form.device_name.id_for_label }}">Device name</label>
                 {{ form.device_name }}
+                {% if form.device_name.errors %}<p class="field-error">{{ form.device_name.errors.0 }}</p>{% endif %}
             </div>
             <div class="form-group">
                 <label for="{{ form.subscription_id.id_for_label }}">Subscription</label>
                 {{ form.subscription_id }}
-                <p class="help-text">Need a plan? <a href="{% url 'subscriptions' %}">Create one</a></p>
+                {% if form.subscription_id.errors %}<p class="field-error">{{ form.subscription_id.errors.0 }}</p>{% endif %}
+                <p class="help-text">Need another plan? <a href="{% url 'subscriptions' %}">Browse plans</a></p>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Create device</button>
+            <div class="form-actions">
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create device</button>
+            </div>
         </form>
     </div>
+    {% endif %}
 </div>
-{% endif %}
 {% endblock %}

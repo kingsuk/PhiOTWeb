@@ -6,6 +6,11 @@
     var editId = null;
     var editableJsonData = null;
 
+    function toast(message) {
+        if (window.showToast) window.showToast(message);
+        else alert(message);
+    }
+
     function compareDifference(current, defaults) {
         var changed = [];
         for (var i = 0; i < defaults.length; i++) {
@@ -33,7 +38,7 @@
     function renderToggles() {
         var container = document.getElementById('pin-toggles');
         container.innerHTML = '';
-        currentConfig.forEach(function (item, index) {
+        currentConfig.forEach(function (item) {
             if (item.value === 2) return;
             var row = document.createElement('div');
             row.className = 'pin-row';
@@ -41,9 +46,12 @@
             var btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'toggle' + (item.value ? ' active' : '');
+            btn.setAttribute('aria-label', 'Toggle ' + item.name);
+            btn.setAttribute('aria-pressed', item.value ? 'true' : 'false');
             btn.addEventListener('click', function () {
                 item.value = item.value ? 0 : 1;
                 btn.classList.toggle('active');
+                btn.setAttribute('aria-pressed', item.value ? 'true' : 'false');
             });
             row.appendChild(btn);
             container.appendChild(row);
@@ -69,27 +77,25 @@
     }
 
     document.getElementById('send-btn').addEventListener('click', function () {
+        if (this.disabled) {
+            toast('Configure MQTT broker first.');
+            return;
+        }
         var changed = compareDifference(currentConfig, defaultConfig);
         if (!changed.length) {
-            alert('Nothing has changed.');
+            toast('Nothing has changed.');
             return;
         }
         document.getElementById('publish-message').value = buildPayload(changed);
         document.getElementById('publish-form').submit();
     });
 
-    document.querySelectorAll('.publish-dataset').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            document.getElementById('publish-message').value = btn.getAttribute('data-json');
-            document.getElementById('publish-form').submit();
-        });
-    });
-
     document.getElementById('copy-token-btn').addEventListener('click', function () {
         var token = document.getElementById('device-token');
+        var self = this;
         navigator.clipboard.writeText(token.value).then(function () {
-            var self = document.getElementById('copy-token-btn');
             self.textContent = 'Copied';
+            toast('Token copied');
             setTimeout(function () { self.textContent = 'Copy'; }, 1500);
         });
     });
@@ -98,7 +104,7 @@
         var changed = compareDifference(currentConfig, defaultConfig);
         if (!changed.length) {
             e.preventDefault();
-            alert('Nothing has changed.');
+            toast('Toggle at least one pin before saving.');
             return;
         }
         var reversed = reverseJsonData(changed);
@@ -114,7 +120,8 @@
             var parsed = JSON.parse(dataset.json_data);
             editableJsonData = parsed[0].data;
             applyDataset(dataset.json_data);
-            document.getElementById('edit-controls').style.display = 'block';
+            document.getElementById('edit-controls').hidden = false;
+            toast('Editing dataset — adjust pins, then save');
         });
     });
 
@@ -122,7 +129,7 @@
         editId = null;
         editableJsonData = null;
         currentConfig = JSON.parse(JSON.stringify(DEVICE_CONFIG.pinConfig));
-        document.getElementById('edit-controls').style.display = 'none';
+        document.getElementById('edit-controls').hidden = true;
         renderToggles();
     });
 
@@ -130,7 +137,7 @@
         if (!editId) return;
         var changed = compareDifference(currentConfig, defaultConfig);
         if (JSON.stringify(editableJsonData) === JSON.stringify(changed)) {
-            alert('Nothing has changed.');
+            toast('Nothing has changed.');
             return;
         }
         var reversed = reverseJsonData(changed);

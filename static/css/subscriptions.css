@@ -1,10 +1,11 @@
 .plan-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem;
 }
 
 .plan-card {
+    position: relative;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -15,8 +16,22 @@
 }
 
 .plan-card.featured {
-    border-color: #93c5fd;
-    box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15);
+    border-color: #5eead4;
+    box-shadow: 0 0 0 1px rgba(15, 118, 110, 0.12);
+}
+
+.plan-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
 }
 
 .plan-card h3 {
@@ -27,7 +42,7 @@
 
 .plan-price {
     font-size: 2rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -0.03em;
 }
 
@@ -46,8 +61,8 @@
 }
 
 .plan-features li {
-    padding: 0.35rem 0;
-    border-bottom: 1px solid #f1f5f9;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #f3f4f6;
 }
 
 .plan-features li:last-child { border-bottom: none; }

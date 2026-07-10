@@ -7,17 +7,25 @@
 {% block content %}
 <div class="auth-page">
     <div class="auth-card">
+        <div class="auth-brand">PhiOT<span>Web</span></div>
         <h1>Welcome back</h1>
         <p class="subtitle">Sign in to manage your IoT devices</p>
-        <form method="post">
+
+        {% if form.errors %}
+        <div class="alert alert-error">Please check your email and password.</div>
+        {% endif %}
+
+        <form method="post" novalidate>
             {% csrf_token %}
             <div class="form-group">
                 <label for="{{ form.email.id_for_label }}">Email</label>
                 {{ form.email }}
+                {% if form.email.errors %}<p class="field-error">{{ form.email.errors.0 }}</p>{% endif %}
             </div>
             <div class="form-group">
                 <label for="{{ form.password.id_for_label }}">Password</label>
                 {{ form.password }}
+                {% if form.password.errors %}<p class="field-error">{{ form.password.errors.0 }}</p>{% endif %}
             </div>
             <button type="submit" class="btn btn-primary btn-block">Sign in</button>
         </form>

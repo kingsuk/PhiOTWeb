@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -54,15 +55,16 @@ def login_view(request):
         )
         if user:
             login(request, user, backend='iot.backends.BcryptEmailBackend')
-            messages.success(request, 'Login successful.')
             return redirect('dashboard')
         messages.error(request, 'Invalid email or password.')
 
     return render(request, 'iot/login.html', {'form': form})
 
 
+@require_POST
 def logout_view(request):
     logout(request)
+    messages.success(request, 'Signed out.')
     return redirect('login')
 
 
@@ -94,8 +96,12 @@ def register_view(request):
 
 @login_required
 def dashboard(request):
-    devices = Device.objects.filter(user=request.user).order_by('-created_date')
-    return render(request, 'iot/dashboard.html', {'devices': devices})
+    devices = Device.objects.filter(user=request.user).select_related('device_type').order_by('-created_date')
+    has_subscriptions = Subscription.objects.filter(user=request.user).exists()
+    return render(request, 'iot/dashboard.html', {
+        'devices': devices,
+        'has_subscriptions': has_subscriptions,
+    })
 
 
 @login_required
@@ -122,11 +128,11 @@ def new_device(request):
 
     form = None
     device_type_id = 1
-    device_type_name = 'Esp8266 NodeMCU'
+    device_type_name = 'NodeMCU'
 
     if show_form:
         device_type_id = int(device_type_param)
-        device_type_name = 'Esp8266 NodeMCU' if device_type_id == 1 else 'Esp8266-01'
+        device_type_name = 'NodeMCU' if device_type_id == 1 else 'ESP-01'
         form = DeviceForm(request.POST or None, initial={'device_type_id': device_type_id})
         form.fields['subscription_id'].choices = [
             (str(sub.id), f"{sub.subscription_name} ({business.subscription_type_name(sub.subscription_type_id)})")
@@ -178,7 +184,7 @@ def create_subscription(request):
         )
         if ok:
             messages.success(request, message)
-            return redirect('dashboard')
+            return redirect('my_subscriptions')
         messages.error(request, message)
     else:
         messages.error(request, 'Please provide a valid subscription name.')
@@ -209,7 +215,7 @@ def _device_control_context(request, device_id, pin_config, template_name):
         messages.error(request, error)
         return None, redirect('dashboard')
 
-    datasets = Dataset.objects.filter(ds_device=device, ds_user=request.user)
+    datasets = Dataset.objects.filter(ds_device=device, ds_user=request.user).order_by('-created_date')
     datasets_for_js = [
         {'id': ds.id, 'json_data': ds.json_data}
         for ds in datasets
@@ -220,6 +226,8 @@ def _device_control_context(request, device_id, pin_config, template_name):
         'datasets_for_js': json.dumps(datasets_for_js),
         'pin_config_json': json.dumps(pin_config),
         'default_config_json': json.dumps(pin_config),
+        'mqtt_configured': bool(settings.MQTT_BROKER_HOST),
+        'mqtt_topic_prefix': settings.MQTT_PUBLISH_TOPIC_PREFIX,
     }), None
 
 

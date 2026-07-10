@@ -168,12 +168,61 @@ class WebFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'auth-card')
         self.assertContains(response, 'Sign in')
+        self.assertContains(response, 'PhiOT')
 
         self._register_and_login(email='ui@test.com')
+        response = self.client.get(reverse('dashboard'))
+        self.assertContains(response, 'Get started')
+        self.assertContains(response, 'Choose a plan')
+
         response = self.client.get(reverse('subscriptions'))
         self.assertContains(response, 'plan-grid')
-        self.assertContains(response, 'Get started')
+        self.assertContains(response, 'Get Free')
 
+    def test_subscription_redirects_to_my_plans(self):
+        self._register_and_login(email='plans@test.com')
+        response = self.client.post(reverse('create_subscription'), {
+            'subscription_name': 'Lab',
+            'subscription_type': '1',
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('my_subscriptions'))
+
+    def test_logout_requires_post(self):
+        self._register_and_login(email='out@test.com')
+        response = self.client.get(reverse('logout'))
+        self.assertEqual(response.status_code, 405)
+        response = self.client.post(reverse('logout'))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse('login'))
+
+    def test_dashboard_empty_state_with_subscription(self):
+        self._register_and_login(email='empty@test.com')
+        self.client.post(reverse('create_subscription'), {
+            'subscription_name': 'Home',
+            'subscription_type': '1',
+        })
+        response = self.client.get(reverse('dashboard'))
+        self.assertContains(response, 'No devices yet')
+        self.assertContains(response, 'Add your first device')
+
+    def test_device_page_shows_mqtt_warning(self):
+        self._register_and_login(email='mqttui@test.com')
+        self.client.post(reverse('create_subscription'), {
+            'subscription_name': 'Home',
+            'subscription_type': '1',
+        })
+        sub = Subscription.objects.get()
+        self.client.post(
+            reverse('new_device') + '?type=1',
+            {'device_name': 'Kitchen MCU', 'device_type_id': '1', 'subscription_id': str(sub.id)},
+        )
+        device = Device.objects.get()
+        response = self.client.get(reverse('device_nodemcu', args=[device.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'MQTT broker is not configured')
+        self.assertContains(response, 'GPIO pins')
+        self.assertContains(response, 'Back')
 
 class MqttServiceTests(TestCase):
     def test_validate_json_message(self):

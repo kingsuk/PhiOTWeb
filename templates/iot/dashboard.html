@@ -1,49 +1,55 @@
 {% extends 'iot/base.html' %}
 
-{% block title %}Dashboard — PhiOTWeb{% endblock %}
+{% block title %}Devices — PhiOTWeb{% endblock %}
 
 {% block content %}
 <div class="container">
-    <div class="page-header">
-        <h1>Devices</h1>
-        <p>Manage and control your connected hardware</p>
-    </div>
-
-    <div class="toolbar">
+    <div class="page-header page-header-row">
+        <div>
+            <h1>Devices</h1>
+            <p>Manage and control your connected hardware</p>
+        </div>
+        {% if devices or has_subscriptions %}
         <a href="{% url 'new_device' %}" class="btn btn-primary">+ Add device</a>
+        {% endif %}
     </div>
 
     {% if devices %}
     <div class="card-grid">
         {% for device in devices %}
-        <article class="card device-card">
+        <a href="{% if device.device_type_id == 1 %}{% url 'device_nodemcu' device.id %}{% else %}{% url 'device_esp' device.id %}{% endif %}" class="card device-card device-card-link">
             <div class="device-card-top">
                 <div class="device-badge {% if device.device_type_id == 1 %}nodemcu{% else %}esp{% endif %}">
                     {% if device.device_type_id == 1 %}MCU{% else %}ESP{% endif %}
                 </div>
-                <div class="device-actions">
-                    {% if device.device_type_id == 1 %}
-                    <a href="{% url 'device_nodemcu' device.id %}" class="btn btn-secondary btn-sm">Open</a>
-                    {% else %}
-                    <a href="{% url 'device_esp' device.id %}" class="btn btn-secondary btn-sm">Open</a>
-                    {% endif %}
-                    <form method="post" action="{% url 'delete_device' device.id %}" onsubmit="return confirm('Delete this device?');">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-ghost btn-sm">Delete</button>
-                    </form>
-                </div>
+                <span class="device-type-label">{% if device.device_type_id == 1 %}NodeMCU{% else %}ESP-01{% endif %}</span>
             </div>
             <div>
                 <h3>{{ device.device_name }}</h3>
                 <div class="device-token">{{ device.device_token }}</div>
             </div>
-        </article>
+            <div class="device-card-footer" onclick="event.preventDefault(); event.stopPropagation();">
+                <form method="post" action="{% url 'delete_device' device.id %}" onsubmit="return confirm('Delete {{ device.device_name }}? This cannot be undone.');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-ghost btn-sm">Delete</button>
+                </form>
+            </div>
+        </a>
         {% endfor %}
+    </div>
+    {% elif has_subscriptions %}
+    <div class="empty-state">
+        <h2>No devices yet</h2>
+        <p>You have a subscription. Add a NodeMCU or ESP-01 to start controlling pins.</p>
+        <a href="{% url 'new_device' %}" class="btn btn-primary">Add your first device</a>
     </div>
     {% else %}
     <div class="empty-state">
-        <p>No devices yet.</p>
-        <a href="{% url 'new_device' %}" class="btn btn-primary" style="margin-top:1rem;">Add your first device</a>
+        <h2>Get started</h2>
+        <p>Create a free subscription first, then register your IoT devices.</p>
+        <div class="empty-actions">
+            <a href="{% url 'subscriptions' %}" class="btn btn-primary">Choose a plan</a>
+        </div>
     </div>
     {% endif %}
 </div>
