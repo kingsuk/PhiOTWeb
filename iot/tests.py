@@ -1,7 +1,7 @@
 import json
 from unittest.mock import patch
 
-from django.test import Client, TestCase
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
 from iot.models import Dataset, Device, DeviceType, PublishLog, Subscription, SubscriptionType, User
@@ -190,3 +190,26 @@ class MqttServiceTests(TestCase):
         from iot.services.mqtt import publish_to_device
         with self.assertRaises(MqttNotConfiguredError):
             publish_to_device('token123', '{}')
+
+
+class ManagementCommandTests(TestCase):
+    @override_settings(DEBUG=True, SECRET_KEY='test-secret-key-for-tests-only')
+    def test_check_env_passes_in_debug(self):
+        from django.core.management import call_command
+        call_command('check_env')
+
+    def test_test_mqtt_dry_run_without_host(self):
+        from django.core.management import call_command
+        from io import StringIO
+        err = StringIO()
+        with self.assertRaises(SystemExit):
+            call_command('test_mqtt', '--dry-run', stderr=err)
+        self.assertIn('MQTT_BROKER_HOST', err.getvalue())
+
+    @override_settings(MQTT_BROKER_HOST='broker.test', MQTT_BROKER_PORT=1883)
+    def test_test_mqtt_dry_run_with_host(self):
+        from django.core.management import call_command
+        from io import StringIO
+        out = StringIO()
+        call_command('test_mqtt', '--dry-run', stdout=out)
+        self.assertIn('valid', out.getvalue().lower())

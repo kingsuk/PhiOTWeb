@@ -21,10 +21,26 @@ IoT device management platform built with **Django 6** and **SQLite**.
 pip install -r requirements.txt
 cp .env.example .env
 python manage.py migrate
+./run.sh
+```
+
+Or manually:
+
+```bash
+python manage.py check_env
 python manage.py runserver 5001
 ```
 
 Open http://localhost:5001
+
+## Management commands
+
+| Command | Purpose |
+|---------|---------|
+| `python manage.py check_env` | Validate `.env` configuration |
+| `python manage.py test_mqtt` | Test MQTT broker connectivity |
+| `python manage.py test_mqtt --dry-run` | Verify MQTT config without publishing |
+| `python manage.py createsuperuser` | Create admin user (email-based) |
 
 ## Database
 
@@ -57,6 +73,8 @@ All configuration lives in `.env`. See `.env.example` for every available variab
 | `MQTT_USERNAME` / `MQTT_PASSWORD` | Broker credentials |
 | `MQTT_PUBLISH_TOPIC_PREFIX` | Outbound topic prefix |
 | `MQTT_USE_TLS` | Enable TLS (`True` / `False`) |
+| `SECURE_SSL_REDIRECT` | Redirect HTTP→HTTPS when `DEBUG=False` |
+| `RUNSERVER_HOST` / `RUNSERVER_PORT` | Used by `./run.sh` |
 
 ## MQTT Configuration
 
