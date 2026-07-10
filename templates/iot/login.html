@@ -1,43 +1,27 @@
 {% extends 'iot/base.html' %}
 {% load static %}
 
-{% block title %}Login — PhiOTWeb{% endblock %}
+{% block title %}Sign in — PhiOTWeb{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'css/auth.css' %}">{% endblock %}
 
 {% block content %}
-<div class="login-screen"></div>
-<div class="login-center">
-    <div class="container min-height" style="margin-top: 20px;">
-        <div class="row">
-            <div class="col-lg-4 col-md-offset-8 col-sm-offset-2">
-                <div class="login" id="card">
-                    <iframe width="100%" height="200" src="https://www.youtube.com/embed/KyYCbSorDpI" frameborder="0" allowfullscreen></iframe>
-                    <div class="front signin_form">
-                        <p>Login Your Account</p>
-                        <form class="login-form" method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <div class="input-group">
-                                    {{ form.email }}
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    {{ form.password }}
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                </div>
-                            </div>
-                            <div class="form-group sign-btn">
-                                <button type="submit" class="btn btn-block btn-primary">Log in</button>
-                                <p><strong>New to PhiOT?</strong><br>
-                                <a href="{% url 'register' %}"><strong>Sign up for a new account</strong></a></p>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+<div class="auth-page">
+    <div class="auth-card">
+        <h1>Welcome back</h1>
+        <p class="subtitle">Sign in to manage your IoT devices</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email }}
             </div>
-        </div>
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+        </form>
+        <p class="auth-footer">No account? <a href="{% url 'register' %}">Create one</a></p>
     </div>
 </div>
 {% endblock %}

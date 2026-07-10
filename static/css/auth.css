@@ -1,34 +1,39 @@
-html, body { height: 100%; width: 100%; }
-
-.login-screen {
-    background-image: url(https://www.squiz.net/__public/Systems/Perspective/FileCache/1-32000/465/prop/header-bg-image.jpg?t=1472431690);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    position: fixed;
-    top: 0; bottom: 0; right: 0; left: 0;
+.auth-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 2rem 1rem;
+    background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 40%),
+        radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.08), transparent 40%),
+        var(--bg);
 }
 
-.login-screen:before {
-    content: "";
-    background: rgba(0,0,0, 0.5);
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
+.auth-card {
+    width: min(400px, 100%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 2rem;
 }
 
-.login-center { text-align: left; position: relative; z-index: 1; }
-.login { width: 320px; color: #fff; max-width: 100%; }
-.login label, .login p { color: #fff; }
-.login-form .input-group .form-control {
-    background: none;
-    height: 44px;
-    color: #ddd;
+.auth-card h1 {
+    margin: 0 0 0.35rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
 }
-.login-form .input-group .input-group-addon { background: none; }
-.login-form .input-group .input-group-addon .glyphicon { color: #1b5a7c; }
-.login .sign-btn .btn { background: #1b5a7c; border-color: #1b5a7c; }
-.min-height { min-height: 380px; }
+
+.auth-card .subtitle {
+    margin: 0 0 1.5rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.auth-footer {
+    margin-top: 1.25rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--muted);
+}

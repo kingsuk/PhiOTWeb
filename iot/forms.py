@@ -1,29 +1,36 @@
 from django import forms
 
+INPUT_CLASS = 'input'
+
 
 class LoginForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Type your email',
+        'class': INPUT_CLASS,
+        'placeholder': 'you@example.com',
+        'autocomplete': 'email',
     }))
     password = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Type your password',
+        'class': INPUT_CLASS,
+        'placeholder': '••••••••',
+        'autocomplete': 'current-password',
     }))
 
 
 class RegisterForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Email',
+        'class': INPUT_CLASS,
+        'placeholder': 'you@example.com',
+        'autocomplete': 'email',
     }))
     password = forms.CharField(min_length=6, widget=forms.PasswordInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Password',
+        'class': INPUT_CLASS,
+        'placeholder': 'At least 6 characters',
+        'autocomplete': 'new-password',
     }))
     confirm_password = forms.CharField(min_length=6, widget=forms.PasswordInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Confirm Password',
+        'class': INPUT_CLASS,
+        'placeholder': 'Repeat password',
+        'autocomplete': 'new-password',
     }))
 
     def clean(self):
@@ -37,7 +44,7 @@ class RegisterForm(forms.Form):
 
 class SubscriptionForm(forms.Form):
     subscription_name = forms.CharField(min_length=3, max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
+        'class': INPUT_CLASS,
         'placeholder': 'Subscription name',
     }))
     subscription_type = forms.IntegerField(widget=forms.HiddenInput())
@@ -45,16 +52,16 @@ class SubscriptionForm(forms.Form):
 
 class DeviceForm(forms.Form):
     device_name = forms.CharField(min_length=3, max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Device name',
+        'class': INPUT_CLASS,
+        'placeholder': 'e.g. Garage sensor',
     }))
-    subscription_id = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': 'form-control'}))
+    subscription_id = forms.ChoiceField(choices=[], widget=forms.Select(attrs={'class': INPUT_CLASS}))
     device_type_id = forms.IntegerField(widget=forms.HiddenInput())
 
 
 class DatasetForm(forms.Form):
     ds_name = forms.CharField(min_length=1, max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
+        'class': INPUT_CLASS,
         'placeholder': 'Dataset name',
     }))
     json_data = forms.CharField(widget=forms.HiddenInput())

@@ -56,7 +56,12 @@ static/       CSS and JavaScript
 manage.py
 ```
 
-## Admin
+## Testing
+
+```bash
+python manage.py check
+python manage.py test iot
+```
 
 Create a superuser for Django admin:
 

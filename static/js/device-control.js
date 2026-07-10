@@ -40,8 +40,7 @@
             row.innerHTML = '<span class="pin-label">' + item.name + '</span>';
             var btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = 'btn btn-sm btn-toggle' + (item.value ? ' active' : '');
-            btn.innerHTML = '<div class="handle"></div>';
+            btn.className = 'toggle' + (item.value ? ' active' : '');
             btn.addEventListener('click', function () {
                 item.value = item.value ? 0 : 1;
                 btn.classList.toggle('active');
@@ -88,11 +87,11 @@
 
     document.getElementById('copy-token-btn').addEventListener('click', function () {
         var token = document.getElementById('device-token');
-        token.select();
-        document.execCommand('copy');
-        this.classList.add('btn-success');
-        var self = this;
-        setTimeout(function () { self.classList.remove('btn-success'); }, 1500);
+        navigator.clipboard.writeText(token.value).then(function () {
+            var self = document.getElementById('copy-token-btn');
+            self.textContent = 'Copied';
+            setTimeout(function () { self.textContent = 'Copy'; }, 1500);
+        });
     });
 
     document.getElementById('create-dataset-form').addEventListener('submit', function (e) {
