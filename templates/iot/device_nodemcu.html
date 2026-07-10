@@ -1,0 +1,15 @@
+{% extends 'iot/base.html' %}
+{% load static %}
+
+{% block title %}{{ device.device_name }} — PhiOTWeb{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/device.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'iot/includes/device_control.html' %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/device-control.js' %}"></script>
+{% endblock %}

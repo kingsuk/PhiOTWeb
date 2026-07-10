@@ -1,0 +1,27 @@
+{% extends 'iot/base.html' %}
+{% load static %}
+
+{% block title %}Sign in — PhiOTWeb{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/auth.css' %}">{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <h1>Welcome back</h1>
+        <p class="subtitle">Sign in to manage your IoT devices</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+        </form>
+        <p class="auth-footer">No account? <a href="{% url 'register' %}">Create one</a></p>
+    </div>
+</div>
+{% endblock %}

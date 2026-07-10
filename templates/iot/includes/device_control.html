@@ -1,0 +1,113 @@
+<div class="container">
+    <div class="page-header">
+        <h1>{{ device.device_name }}</h1>
+        <p>Configure GPIO pins and publish commands</p>
+    </div>
+
+    <div class="device-layout">
+        <section>
+            <div class="device-board {% if device.device_type_id == 1 %}nodemcu-board{% else %}esp-board{% endif %}">
+                {% if device.device_type_id == 1 %}NodeMCU{% else %}ESP-01{% endif %}
+            </div>
+            <div class="pin-panel" id="pin-toggles"></div>
+        </section>
+
+        <section class="control-panel">
+            <div id="edit-controls" style="display:none;" class="control-actions">
+                <button type="button" class="btn btn-primary" id="save-edit-btn">Save changes</button>
+                <button type="button" class="btn btn-secondary" id="cancel-edit-btn">Cancel</button>
+            </div>
+
+            <div class="form-group">
+                <label>Device token</label>
+                <div class="token-row">
+                    <input type="text" class="input" id="device-token" value="{{ device.device_token }}" readonly>
+                    <button type="button" class="btn btn-secondary" id="copy-token-btn">Copy</button>
+                </div>
+            </div>
+
+            <form method="post" action="{% url 'device_publish' device.id %}" id="publish-form">
+                {% csrf_token %}
+                <input type="hidden" name="message" id="publish-message">
+                <button type="button" class="btn btn-primary btn-block" id="send-btn">Send to device</button>
+            </form>
+
+            <div class="control-actions">
+                <button type="button" class="btn btn-secondary" data-modal-open="#createDatasetModal">Save dataset</button>
+                <form method="post" action="{% url 'device_station' device.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-secondary btn-block">Station mode</button>
+                </form>
+            </div>
+
+            <div>
+                <label>Saved datasets</label>
+                <div class="dataset-panel">
+                    {% for ds in datasets %}
+                    <div class="dataset-item">
+                        <div class="dataset-item-header">
+                            <strong>{{ ds.ds_name }}</strong>
+                            <div style="display:flex;gap:0.25rem;">
+                                <button type="button" class="btn btn-ghost btn-sm edit-dataset" data-id="{{ ds.id }}">Edit</button>
+                                <form method="post" action="{% url 'delete_dataset' device.id ds.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-ghost btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="dataset-item-actions">
+                            <form method="post" action="{% url 'device_publish' device.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="message" value="{{ ds.json_data }}">
+                                <button type="submit" class="btn btn-success btn-block">ON</button>
+                            </form>
+                            <form method="post" action="{% url 'device_publish' device.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="message" value="{{ ds.reverse_json_data }}">
+                                <button type="submit" class="btn btn-danger btn-block">OFF</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p style="color:var(--muted);font-size:0.9rem;margin:0;">No datasets saved yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="modal-backdrop" id="createDatasetModal" hidden>
+    <div class="modal" role="dialog">
+        <div class="modal-header">
+            <h2>New dataset</h2>
+            <button type="button" class="modal-close" data-modal-close>&times;</button>
+        </div>
+        <form method="post" action="{% url 'create_dataset' device.id %}" id="create-dataset-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="ds_name">Name</label>
+                <input type="text" id="ds_name" name="ds_name" class="input" required placeholder="e.g. Living room lights">
+            </div>
+            <input type="hidden" name="json_data" id="create-json-data">
+            <input type="hidden" name="reverse_json_data" id="create-reverse-json-data">
+            <button type="submit" class="btn btn-primary btn-block">Save</button>
+        </form>
+    </div>
+</div>
+
+<form method="post" action="" id="edit-dataset-form" style="display:none;">
+    {% csrf_token %}
+    <input type="hidden" name="json_data" id="edit-json-data">
+    <input type="hidden" name="reverse_json_data" id="edit-reverse-json-data">
+</form>
+
+<script id="device-datasets" type="application/json">{{ datasets_for_js|safe }}</script>
+<script>
+    window.DEVICE_CONFIG = {
+        pinConfig: {{ pin_config_json|safe }},
+        defaultConfig: {{ default_config_json|safe }},
+        editDatasetUrl: "{% url 'edit_dataset' device.id 0 %}".replace('/0/', '/'),
+        datasets: JSON.parse(document.getElementById('device-datasets').textContent),
+    };
+</script>

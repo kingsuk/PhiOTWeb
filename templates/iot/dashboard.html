@@ -1,0 +1,50 @@
+{% extends 'iot/base.html' %}
+
+{% block title %}Dashboard — PhiOTWeb{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Devices</h1>
+        <p>Manage and control your connected hardware</p>
+    </div>
+
+    <div class="toolbar">
+        <a href="{% url 'new_device' %}" class="btn btn-primary">+ Add device</a>
+    </div>
+
+    {% if devices %}
+    <div class="card-grid">
+        {% for device in devices %}
+        <article class="card device-card">
+            <div class="device-card-top">
+                <div class="device-badge {% if device.device_type_id == 1 %}nodemcu{% else %}esp{% endif %}">
+                    {% if device.device_type_id == 1 %}MCU{% else %}ESP{% endif %}
+                </div>
+                <div class="device-actions">
+                    {% if device.device_type_id == 1 %}
+                    <a href="{% url 'device_nodemcu' device.id %}" class="btn btn-secondary btn-sm">Open</a>
+                    {% else %}
+                    <a href="{% url 'device_esp' device.id %}" class="btn btn-secondary btn-sm">Open</a>
+                    {% endif %}
+                    <form method="post" action="{% url 'delete_device' device.id %}" onsubmit="return confirm('Delete this device?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-ghost btn-sm">Delete</button>
+                    </form>
+                </div>
+            </div>
+            <div>
+                <h3>{{ device.device_name }}</h3>
+                <div class="device-token">{{ device.device_token }}</div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No devices yet.</p>
+        <a href="{% url 'new_device' %}" class="btn btn-primary" style="margin-top:1rem;">Add your first device</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

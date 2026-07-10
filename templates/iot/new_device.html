@@ -1,0 +1,52 @@
+{% extends 'iot/base.html' %}
+
+{% block title %}Add device — PhiOTWeb{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Add device</h1>
+        <p>Select a board type to get started</p>
+    </div>
+
+    <div class="card-grid" style="max-width:640px;">
+        <article class="card" style="text-align:center;">
+            <div class="device-badge nodemcu" style="margin:0 auto 1rem;">MCU</div>
+            <h3 style="margin:0 0 0.5rem;">NodeMCU</h3>
+            <p style="color:var(--muted);font-size:0.9rem;margin:0 0 1rem;">ESP8266 development board</p>
+            <a href="{% url 'new_device' %}?type=1" class="btn btn-primary btn-block">Add NodeMCU</a>
+        </article>
+        <article class="card" style="text-align:center;">
+            <div class="device-badge esp" style="margin:0 auto 1rem;">ESP</div>
+            <h3 style="margin:0 0 0.5rem;">ESP-01</h3>
+            <p style="color:var(--muted);font-size:0.9rem;margin:0 0 1rem;">Compact ESP8266 module</p>
+            <a href="{% url 'new_device' %}?type=2" class="btn btn-primary btn-block">Add ESP-01</a>
+        </article>
+    </div>
+</div>
+
+{% if show_form and form %}
+<div class="modal-backdrop" id="addDeviceModal">
+    <div class="modal" role="dialog">
+        <div class="modal-header">
+            <h2>New {{ device_type_name }}</h2>
+            <a href="{% url 'new_device' %}" class="modal-close">&times;</a>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.device_type_id }}
+            <div class="form-group">
+                <label for="{{ form.device_name.id_for_label }}">Device name</label>
+                {{ form.device_name }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.subscription_id.id_for_label }}">Subscription</label>
+                {{ form.subscription_id }}
+                <p class="help-text">Need a plan? <a href="{% url 'subscriptions' %}">Create one</a></p>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Create device</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

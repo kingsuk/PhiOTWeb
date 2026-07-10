@@ -1,0 +1,50 @@
+{% extends 'iot/base.html' %}
+
+{% block title %}My subscriptions — PhiOTWeb{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>My subscriptions</h1>
+        <p>Active plans linked to your account</p>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Plan</th>
+                    <th>Created</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in subscriptions %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ sub.subscription_name }}</td>
+                    <td>
+                        {% if sub.subscription_type_id == 1 %}Free
+                        {% elif sub.subscription_type_id == 2 %}Dev
+                        {% else %}Pro{% endif %}
+                    </td>
+                    <td>{{ sub.created_date|date:"M d, Y" }}</td>
+                    <td>
+                        <form method="post" action="{% url 'delete_subscription' sub.id %}" onsubmit="return confirm('Delete this subscription?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-ghost btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="color:var(--muted);">No subscriptions yet. <a href="{% url 'subscriptions' %}">Browse plans</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
