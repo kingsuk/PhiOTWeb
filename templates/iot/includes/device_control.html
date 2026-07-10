@@ -16,6 +16,49 @@
         <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back</a>
     </div>
 
+    <div class="stats-row compact">
+        <div class="stat-card">
+            <div class="stat-label">Usage today</div>
+            <div class="stat-value">{{ usage.calls_today }} <span>/ {{ usage.limit }}</span></div>
+            <div class="meter" aria-hidden="true">
+                <div class="meter-fill {% if usage.percent >= 90 %}danger{% elif usage.percent >= 70 %}warn{% endif %}" style="width: {{ usage.percent }}%"></div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Subscription</div>
+            <div class="stat-value">{{ usage.days_left }} <span>days left</span></div>
+            <p class="help-text">{{ usage.validity }}-day plan window</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">MQTT</div>
+            <div class="stat-value status-line">
+                {% if mqtt_configured %}
+                <span class="status-dot online"></span> Ready
+                {% else %}
+                <span class="status-dot offline"></span> Offline
+                {% endif %}
+            </div>
+            {% if mqtt_configured %}
+            <form method="post" action="{% url 'check_mqtt' device.id %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-ghost btn-sm">Test connection</button>
+            </form>
+            {% else %}
+            <p class="help-text">Set MQTT_BROKER_HOST in .env</p>
+            {% endif %}
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Last publish</div>
+            {% if usage.last_publish %}
+            <div class="stat-value small">{{ usage.last_publish.created_date|timesince }} ago</div>
+            <p class="help-text">{{ usage.last_publish.created_date|date:"M d, H:i" }}</p>
+            {% else %}
+            <div class="stat-value small">Never</div>
+            <p class="help-text">No messages sent yet</p>
+            {% endif %}
+        </div>
+    </div>
+
     {% if not mqtt_configured %}
     <div class="alert alert-warning">
         MQTT broker is not configured. Set <code>MQTT_BROKER_HOST</code> in your <code>.env</code> file to enable publishing.
@@ -29,9 +72,10 @@
             </div>
             <div class="pin-panel-header">
                 <strong>GPIO pins</strong>
-                <span class="help-text">Flip switches, then send or save</span>
+                <button type="button" class="btn btn-ghost btn-sm" id="shortcuts-help-btn" title="Keyboard shortcuts">Shortcuts</button>
             </div>
             <div class="pin-panel" id="pin-toggles"></div>
+            <p class="help-text" id="shortcuts-hint">Press <kbd>1</kbd>–<kbd>9</kbd> to toggle pins, <kbd>S</kbd> to send, <kbd>?</kbd> for help.</p>
         </section>
 
         <section class="control-panel">
@@ -43,13 +87,24 @@
                 </div>
             </div>
 
+            <div class="card rename-card">
+                <form method="post" action="{% url 'rename_device' device.id %}" class="rename-form">
+                    {% csrf_token %}
+                    <div class="form-group" style="margin-bottom:0;flex:1;">
+                        <label for="{{ rename_form.device_name.id_for_label }}">Device name</label>
+                        {{ rename_form.device_name }}
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Rename</button>
+                </form>
+            </div>
+
             <div class="form-group">
                 <label for="device-token">Device token</label>
                 <div class="token-row">
                     <input type="text" class="input" id="device-token" value="{{ device.device_token }}" readonly>
                     <button type="button" class="btn btn-secondary" id="copy-token-btn">Copy</button>
                 </div>
-                <p class="help-text">Used as the MQTT topic suffix: <code>{{ mqtt_topic_prefix }}{{ device.device_token }}</code></p>
+                <p class="help-text">MQTT topic: <code>{{ mqtt_topic_prefix }}{{ device.device_token }}</code>{% if mqtt_broker %} · broker <code>{{ mqtt_broker }}:{{ mqtt_port }}</code>{% endif %}</p>
             </div>
 
             <form method="post" action="{% url 'device_publish' device.id %}" id="publish-form">
@@ -127,6 +182,23 @@
             <input type="hidden" name="reverse_json_data" id="create-reverse-json-data">
             <button type="submit" class="btn btn-primary btn-block">Save</button>
         </form>
+    </div>
+</div>
+
+<div class="modal-backdrop" id="shortcutsModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+        <div class="modal-header">
+            <h2>Keyboard shortcuts</h2>
+            <button type="button" class="modal-close" data-modal-close aria-label="Close">&times;</button>
+        </div>
+        <ul class="shortcut-list">
+            <li><kbd>1</kbd>–<kbd>9</kbd> Toggle pin by position</li>
+            <li><kbd>0</kbd> Toggle 10th pin (if present)</li>
+            <li><kbd>S</kbd> Send pin changes</li>
+            <li><kbd>R</kbd> Reset all pins to off</li>
+            <li><kbd>?</kbd> Show this help</li>
+            <li><kbd>Esc</kbd> Close dialogs</li>
+        </ul>
     </div>
 </div>
 

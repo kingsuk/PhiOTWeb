@@ -119,6 +119,45 @@ code {
 .brand span { color: var(--primary); }
 .brand:hover { text-decoration: none; }
 
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    cursor: pointer;
+    padding: 0;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--text);
+    margin: 0 auto;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.nav-toggle[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+.nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+.nav-panel {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    justify-content: space-between;
+}
+
 .nav-links {
     display: flex;
     gap: 0.2rem;
@@ -546,9 +585,140 @@ tr:last-child td { border-bottom: none; }
 
 .section-label label { margin: 0; }
 
+/* Stats / usage meter */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.stats-row.compact { margin-bottom: 1.25rem; }
+
+.stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    box-shadow: var(--shadow);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin-bottom: 0.35rem;
+}
+
+.stat-value {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.stat-value.small { font-size: 1.05rem; }
+
+.stat-value span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.status-line {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 1.05rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+}
+
+.status-dot.online { background: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+.status-dot.offline { background: #f59e0b; }
+
+.meter {
+    margin-top: 0.65rem;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.meter-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 999px;
+    transition: width 0.3s;
+}
+
+.meter-fill.warn { background: #d97706; }
+.meter-fill.danger { background: #dc2626; }
+
+kbd {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 6px;
+    background: #f9fafb;
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+}
+
+.shortcut-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.shortcut-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.9rem;
+}
+
+.shortcut-list li:last-child { border-bottom: none; }
+
+.rename-card { padding: 1rem; }
+.rename-form {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
 @media (max-width: 720px) {
+    .nav-toggle { display: flex; }
+    .nav-panel {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding-top: 0.5rem;
+    }
+    .nav-panel.open { display: flex; }
     .topnav-inner { flex-wrap: wrap; }
-    .nav-links { flex-wrap: wrap; }
-    .nav-user { width: 100%; justify-content: space-between; }
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+    }
+    .nav-links a { border-radius: 10px; }
+    .nav-user {
+        width: 100%;
+        justify-content: space-between;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--border);
+    }
     .page-header-row { flex-direction: column; }
+    .rename-form { flex-direction: column; align-items: stretch; }
 }

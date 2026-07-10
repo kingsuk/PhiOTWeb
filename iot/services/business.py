@@ -68,6 +68,58 @@ def create_device(user, device_name, device_type_id, subscription_id):
     return device, 'Device created successfully.'
 
 
+def rename_device(user, device_id, new_name):
+    new_name = (new_name or '').strip()
+    if len(new_name) < 3:
+        return False, 'Device name must be at least 3 characters.'
+    updated = Device.objects.filter(id=device_id, user=user).update(device_name=new_name)
+    if not updated:
+        return False, 'Device not found.'
+    return True, 'Device renamed successfully.'
+
+
+def usage_for_user(user):
+    calls_today = today_publish_count(user)
+    subscriptions = Subscription.objects.filter(user=user).select_related('subscription_type')
+    if not subscriptions.exists():
+        return {
+            'calls_today': calls_today,
+            'limit': 0,
+            'percent': 0,
+            'has_subscription': False,
+        }
+    limit = max(sub.subscription_type.api_calls_per_day for sub in subscriptions)
+    percent = min(100, int((calls_today / limit) * 100)) if limit else 0
+    return {
+        'calls_today': calls_today,
+        'limit': limit,
+        'percent': percent,
+        'has_subscription': True,
+    }
+
+
+def usage_for_device(device):
+    calls_today = today_publish_count(device.user)
+    limit = device.subscription.subscription_type.api_calls_per_day
+    percent = min(100, int((calls_today / limit) * 100)) if limit else 0
+    days_left = device.subscription.subscription_type.validity - (
+        timezone.now() - device.subscription.modified_date
+    ).days
+    last_publish = (
+        PublishLog.objects.filter(token=device.device_token, user=device.user)
+        .order_by('-created_date')
+        .first()
+    )
+    return {
+        'calls_today': calls_today,
+        'limit': limit,
+        'percent': percent,
+        'days_left': max(0, days_left),
+        'validity': device.subscription.subscription_type.validity,
+        'last_publish': last_publish,
+    }
+
+
 def delete_device(user, device_id):
     deleted, _ = Device.objects.filter(id=device_id, user=user).delete()
     if not deleted:

@@ -12,6 +12,15 @@
 
     window.showToast = showToast;
 
+    var navToggle = document.getElementById('nav-toggle');
+    var navPanel = document.getElementById('nav-panel');
+    if (navToggle && navPanel) {
+        navToggle.addEventListener('click', function () {
+            var open = navPanel.classList.toggle('open');
+            navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    }
+
     document.querySelectorAll('.alert-close').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var alert = btn.closest('.alert');
@@ -61,8 +70,13 @@
         backdrop.addEventListener('click', function (e) {
             if (e.target === backdrop) backdrop.hidden = true;
         });
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && !backdrop.hidden) backdrop.hidden = true;
-        });
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.modal-backdrop:not([hidden])').forEach(function (modal) {
+                modal.hidden = true;
+            });
+        }
     });
 })();

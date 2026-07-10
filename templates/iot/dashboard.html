@@ -14,6 +14,34 @@
         {% endif %}
     </div>
 
+    {% if usage.has_subscription %}
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-label">API calls today</div>
+            <div class="stat-value">{{ usage.calls_today }} <span>/ {{ usage.limit }}</span></div>
+            <div class="meter" aria-hidden="true">
+                <div class="meter-fill {% if usage.percent >= 90 %}danger{% elif usage.percent >= 70 %}warn{% endif %}" style="width: {{ usage.percent }}%"></div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">MQTT broker</div>
+            <div class="stat-value status-line">
+                {% if mqtt_configured %}
+                <span class="status-dot online"></span> Configured
+                {% else %}
+                <span class="status-dot offline"></span> Not set
+                {% endif %}
+            </div>
+            <p class="help-text">{% if mqtt_configured %}Ready to publish commands{% else %}Set MQTT_BROKER_HOST in .env{% endif %}</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Devices</div>
+            <div class="stat-value">{{ devices|length }}</div>
+            <p class="help-text">Registered on your account</p>
+        </div>
+    </div>
+    {% endif %}
+
     {% if devices %}
     <div class="card-grid">
         {% for device in devices %}

@@ -59,6 +59,13 @@ class DeviceForm(forms.Form):
     device_type_id = forms.IntegerField(widget=forms.HiddenInput())
 
 
+class RenameDeviceForm(forms.Form):
+    device_name = forms.CharField(min_length=3, max_length=200, widget=forms.TextInput(attrs={
+        'class': INPUT_CLASS,
+        'placeholder': 'Device name',
+    }))
+
+
 class DatasetForm(forms.Form):
     ds_name = forms.CharField(min_length=1, max_length=200, widget=forms.TextInput(attrs={
         'class': INPUT_CLASS,

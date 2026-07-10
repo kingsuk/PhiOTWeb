@@ -7,9 +7,16 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods, require_POST
 
-from iot.forms import DatasetForm, DeviceForm, LoginForm, RegisterForm, SubscriptionForm
+from iot.forms import DatasetForm, DeviceForm, LoginForm, RegisterForm, RenameDeviceForm, SubscriptionForm
 from iot.models import Dataset, Device, Subscription, SubscriptionType
 from iot.services import business
+from iot.services.mqtt import check_broker_connection
+
+
+def _device_redirect(device):
+    if device.device_type_id == 1:
+        return redirect('device_nodemcu', device_id=device.id)
+    return redirect('device_esp', device_id=device.id)
 
 NODEMCU_PINS = [
     {'name': 'D0', 'pin': 16, 'value': 0},
@@ -96,12 +103,47 @@ def register_view(request):
 
 @login_required
 def dashboard(request):
-    devices = Device.objects.filter(user=request.user).select_related('device_type').order_by('-created_date')
+    devices = Device.objects.filter(user=request.user).select_related(
+        'device_type', 'subscription__subscription_type',
+    ).order_by('-created_date')
     has_subscriptions = Subscription.objects.filter(user=request.user).exists()
+    usage = business.usage_for_user(request.user)
     return render(request, 'iot/dashboard.html', {
         'devices': devices,
         'has_subscriptions': has_subscriptions,
+        'usage': usage,
+        'mqtt_configured': bool(settings.MQTT_BROKER_HOST),
     })
+
+
+@login_required
+@require_POST
+def rename_device_view(request, device_id):
+    form = RenameDeviceForm(request.POST)
+    device = get_object_or_404(Device, id=device_id, user=request.user)
+    if form.is_valid():
+        ok, message = business.rename_device(
+            request.user, device_id, form.cleaned_data['device_name'],
+        )
+        if ok:
+            messages.success(request, message)
+        else:
+            messages.error(request, message)
+    else:
+        messages.error(request, 'Enter a valid device name (at least 3 characters).')
+    return _device_redirect(device)
+
+
+@login_required
+@require_POST
+def check_mqtt_view(request, device_id):
+    device = get_object_or_404(Device, id=device_id, user=request.user)
+    ok, message = check_broker_connection()
+    if ok:
+        messages.success(request, message)
+    else:
+        messages.error(request, message)
+    return _device_redirect(device)
 
 
 @login_required
@@ -209,7 +251,11 @@ def delete_subscription_view(request, subscription_id):
 
 
 def _device_control_context(request, device_id, pin_config, template_name):
-    device = get_object_or_404(Device, id=device_id, user=request.user)
+    device = get_object_or_404(
+        Device.objects.select_related('subscription__subscription_type'),
+        id=device_id,
+        user=request.user,
+    )
     device_obj, error = business.get_device_with_limits(device_id)
     if error:
         messages.error(request, error)
@@ -220,6 +266,8 @@ def _device_control_context(request, device_id, pin_config, template_name):
         {'id': ds.id, 'json_data': ds.json_data}
         for ds in datasets
     ]
+    usage = business.usage_for_device(device)
+    rename_form = RenameDeviceForm(initial={'device_name': device.device_name})
     return render(request, template_name, {
         'device': device,
         'datasets': datasets,
@@ -228,6 +276,10 @@ def _device_control_context(request, device_id, pin_config, template_name):
         'default_config_json': json.dumps(pin_config),
         'mqtt_configured': bool(settings.MQTT_BROKER_HOST),
         'mqtt_topic_prefix': settings.MQTT_PUBLISH_TOPIC_PREFIX,
+        'mqtt_broker': settings.MQTT_BROKER_HOST,
+        'mqtt_port': settings.MQTT_BROKER_PORT,
+        'usage': usage,
+        'rename_form': rename_form,
     }), None
 
 
@@ -262,9 +314,7 @@ def device_publish(request, device_id):
     else:
         messages.error(request, result_message)
 
-    if device.device_type_id == 1:
-        return redirect('device_nodemcu', device_id=device.id)
-    return redirect('device_esp', device_id=device.id)
+    return _device_redirect(device)
 
 
 @login_required
@@ -278,9 +328,7 @@ def device_station(request, device_id):
     else:
         messages.error(request, result_message)
 
-    if device.device_type_id == 1:
-        return redirect('device_nodemcu', device_id=device.id)
-    return redirect('device_esp', device_id=device.id)
+    return _device_redirect(device)
 
 
 @login_required
@@ -300,9 +348,7 @@ def create_dataset(request, device_id):
     else:
         messages.error(request, 'Invalid dataset data.')
 
-    if device.device_type_id == 1:
-        return redirect('device_nodemcu', device_id=device.id)
-    return redirect('device_esp', device_id=device.id)
+    return _device_redirect(device)
 
 
 @login_required
@@ -317,9 +363,7 @@ def edit_dataset(request, device_id, dataset_id):
     dataset.save()
     messages.success(request, 'Dataset updated successfully.')
 
-    if device.device_type_id == 1:
-        return redirect('device_nodemcu', device_id=device.id)
-    return redirect('device_esp', device_id=device.id)
+    return _device_redirect(device)
 
 
 @login_required
@@ -329,6 +373,4 @@ def delete_dataset(request, device_id, dataset_id):
     Dataset.objects.filter(id=dataset_id, ds_user=request.user, ds_device=device).delete()
     messages.success(request, 'Dataset deleted successfully.')
 
-    if device.device_type_id == 1:
-        return redirect('device_nodemcu', device_id=device.id)
-    return redirect('device_esp', device_id=device.id)
+    return _device_redirect(device)

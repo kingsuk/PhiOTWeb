@@ -223,6 +223,72 @@ class WebFlowTests(TestCase):
         self.assertContains(response, 'MQTT broker is not configured')
         self.assertContains(response, 'GPIO pins')
         self.assertContains(response, 'Back')
+        self.assertContains(response, 'Usage today')
+        self.assertContains(response, 'Rename')
+        self.assertContains(response, 'Last publish')
+        self.assertContains(response, 'Shortcuts')
+
+    def test_rename_device(self):
+        self._register_and_login(email='rename@test.com')
+        self.client.post(reverse('create_subscription'), {
+            'subscription_name': 'Home',
+            'subscription_type': '1',
+        })
+        sub = Subscription.objects.get()
+        self.client.post(
+            reverse('new_device') + '?type=1',
+            {'device_name': 'Old Name', 'device_type_id': '1', 'subscription_id': str(sub.id)},
+        )
+        device = Device.objects.get()
+        response = self.client.post(reverse('rename_device', args=[device.id]), {
+            'device_name': 'New Name',
+        })
+        self.assertEqual(response.status_code, 302)
+        device.refresh_from_db()
+        self.assertEqual(device.device_name, 'New Name')
+
+    def test_dashboard_shows_usage_meter(self):
+        self._register_and_login(email='usage@test.com')
+        self.client.post(reverse('create_subscription'), {
+            'subscription_name': 'Home',
+            'subscription_type': '1',
+        })
+        response = self.client.get(reverse('dashboard'))
+        self.assertContains(response, 'API calls today')
+        self.assertContains(response, 'MQTT broker')
+
+    def test_check_mqtt_without_config(self):
+        self._register_and_login(email='checkmqtt@test.com')
+        self.client.post(reverse('create_subscription'), {
+            'subscription_name': 'Home',
+            'subscription_type': '1',
+        })
+        sub = Subscription.objects.get()
+        self.client.post(
+            reverse('new_device') + '?type=1',
+            {'device_name': 'Board', 'device_type_id': '1', 'subscription_id': str(sub.id)},
+        )
+        device = Device.objects.get()
+        response = self.client.post(reverse('check_mqtt', args=[device.id]))
+        self.assertEqual(response.status_code, 302)
+
+    def test_usage_helpers(self):
+        user = User.objects.create_user(email='stats@test.com', password='secret12')
+        plan = SubscriptionType.objects.get(id=1)
+        sub = Subscription.objects.create(user=user, subscription_type=plan, subscription_name='S')
+        device, _ = business.create_device(user, 'StatsDev', 1, sub.id)
+        usage = business.usage_for_user(user)
+        self.assertTrue(usage['has_subscription'])
+        self.assertEqual(usage['calls_today'], 0)
+        self.assertEqual(usage['limit'], plan.api_calls_per_day)
+        device_usage = business.usage_for_device(device)
+        self.assertEqual(device_usage['calls_today'], 0)
+        self.assertIsNone(device_usage['last_publish'])
+        ok, msg = business.rename_device(user, device.id, 'Renamed')
+        self.assertTrue(ok)
+        device.refresh_from_db()
+        self.assertEqual(device.device_name, 'Renamed')
+
 
 class MqttServiceTests(TestCase):
     def test_validate_json_message(self):
@@ -239,6 +305,12 @@ class MqttServiceTests(TestCase):
         from iot.services.mqtt import publish_to_device
         with self.assertRaises(MqttNotConfiguredError):
             publish_to_device('token123', '{}')
+
+    def test_check_broker_without_config(self):
+        from iot.services.mqtt import check_broker_connection
+        ok, message = check_broker_connection()
+        self.assertFalse(ok)
+        self.assertIn('not configured', message)
 
 
 class ManagementCommandTests(TestCase):

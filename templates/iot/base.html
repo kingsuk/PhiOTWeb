@@ -13,20 +13,23 @@
 <header class="topnav">
     <div class="topnav-inner">
         <a class="brand" href="{% url 'dashboard' %}">PhiOT<span>Web</span></a>
-        <nav>
+        <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <nav class="nav-panel" id="nav-panel">
             <ul class="nav-links">
                 <li><a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'new_device' %}active{% endif %}">Devices</a></li>
                 <li><a href="{% url 'subscriptions' %}" class="{% if request.resolver_match.url_name == 'subscriptions' %}active{% endif %}">Plans</a></li>
                 <li><a href="{% url 'my_subscriptions' %}" class="{% if request.resolver_match.url_name == 'my_subscriptions' %}active{% endif %}">My Plans</a></li>
             </ul>
+            <div class="nav-user">
+                <span class="nav-email" title="{{ user.email }}">{{ user.email }}</span>
+                <form method="post" action="{% url 'logout' %}" class="inline-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-secondary btn-sm">Sign out</button>
+                </form>
+            </div>
         </nav>
-        <div class="nav-user">
-            <span class="nav-email" title="{{ user.email }}">{{ user.email }}</span>
-            <form method="post" action="{% url 'logout' %}" class="inline-form">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-secondary btn-sm">Sign out</button>
-            </form>
-        </div>
     </div>
 </header>
 {% endif %}
