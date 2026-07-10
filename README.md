@@ -34,6 +34,30 @@ SQLite (`db.sqlite3`) with Django migrations. Reference data (device types, subs
 rm db.sqlite3 && python manage.py migrate
 ```
 
+## Environment variables
+
+Copy the example file and edit your values:
+
+```bash
+cp .env.example .env
+```
+
+All configuration lives in `.env`. See `.env.example` for every available variable:
+
+| Variable | Purpose |
+|----------|---------|
+| `SECRET_KEY` | Django secret key (required in production) |
+| `DEBUG` | Debug mode (`True` / `False`) |
+| `ALLOWED_HOSTS` | Comma-separated hostnames |
+| `CSRF_TRUSTED_ORIGINS` | HTTPS origins for CSRF |
+| `DATABASE_PATH` | SQLite file path |
+| `DEVICE_TOKEN_LENGTH` | Length of device MQTT tokens |
+| `MQTT_BROKER_HOST` | MQTT broker hostname |
+| `MQTT_BROKER_PORT` | MQTT broker port |
+| `MQTT_USERNAME` / `MQTT_PASSWORD` | Broker credentials |
+| `MQTT_PUBLISH_TOPIC_PREFIX` | Outbound topic prefix |
+| `MQTT_USE_TLS` | Enable TLS (`True` / `False`) |
+
 ## MQTT Configuration
 
 Set in `.env` when your broker is ready:
